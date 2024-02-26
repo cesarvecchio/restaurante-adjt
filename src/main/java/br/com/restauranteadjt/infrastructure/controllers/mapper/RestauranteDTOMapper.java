@@ -2,11 +2,11 @@ package br.com.restauranteadjt.infrastructure.controllers.mapper;
 
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
-import br.com.restauranteadjt.infrastructure.controllers.dto.response.CreateRestauranteResponse;
+import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 
 public class RestauranteDTOMapper {
-    public CreateRestauranteResponse toResponse(RestauranteDomain domainObj){
-        return new CreateRestauranteResponse(
+    public RestauranteResponse toResponse(RestauranteDomain domainObj){
+        return new RestauranteResponse(
                 domainObj.nome(),
                 domainObj.localizacao(),
                 domainObj.tipoCozinha(),

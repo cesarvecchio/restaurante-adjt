@@ -1,40 +1,52 @@
 package br.com.restauranteadjt.infrastructure.controllers;
 
-import br.com.restauranteadjt.application.usecases.CreateRestauranteInteractor;
+import br.com.restauranteadjt.application.usecases.RestauranteUseCase;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
+import br.com.restauranteadjt.domain.enums.TipoCozinhaEnum;
+import br.com.restauranteadjt.domain.valueObject.Endereco;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
-import br.com.restauranteadjt.infrastructure.controllers.dto.response.CreateRestauranteResponse;
+import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.RestauranteDTOMapper;
 import br.com.restauranteadjt.infrastructure.presenter.RestaurantePresenter;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/restaurantes")
 public class RestauranteController {
-    private final CreateRestauranteInteractor createRestauranteInteractor;
+    private final RestauranteUseCase restauranteUseCase;
     private final RestauranteDTOMapper restauranteDTOMapper;
     private final RestaurantePresenter restaurantePresenter;
 
-    public RestauranteController(CreateRestauranteInteractor createRestauranteInteractor,
+    public RestauranteController(RestauranteUseCase restauranteUseCase,
                                  RestauranteDTOMapper restauranteDTOMapper,
                                  RestaurantePresenter restaurantePresenter) {
-        this.createRestauranteInteractor = createRestauranteInteractor;
+        this.restauranteUseCase = restauranteUseCase;
         this.restauranteDTOMapper = restauranteDTOMapper;
         this.restaurantePresenter = restaurantePresenter;
     }
 
     @PostMapping
-    public ResponseEntity<CreateRestauranteResponse> create(@RequestBody CreateRestauranteRequest request) {
+    public ResponseEntity<RestauranteResponse> create(@RequestBody CreateRestauranteRequest request) {
         RestauranteDomain restauranteDomain = restauranteDTOMapper.toRestauranteDomain(request);
 
-        RestauranteDomain restaurante = createRestauranteInteractor.createRestaurante(restauranteDomain);
+        RestauranteDomain restaurante = restauranteUseCase.create(restauranteDomain);
 
-        CreateRestauranteResponse response = restauranteDTOMapper.toResponse(restaurante);
+        RestauranteResponse response = restauranteDTOMapper.toResponse(restaurante);
 
-        return restaurantePresenter.toResponseEntity(response);
+        return restaurantePresenter.toResponseEntity(response, HttpStatusCode.valueOf(201));
+    }
+
+    @GetMapping
+    public ResponseEntity<RestauranteResponse> find(@RequestParam(required = false) String nome,
+                                                    @RequestParam(required = false) TipoCozinhaEnum tipoCozinha,
+                                                    @RequestParam(required = false) Endereco endereco){
+        RestauranteDomain restaurante = restauranteUseCase
+                .findByNomeOrTipoCozinhaOrLocalizacao(nome, tipoCozinha, endereco);
+
+        RestauranteResponse response = restauranteDTOMapper.toResponse(restaurante);
+
+        return restaurantePresenter.toResponseEntity(response, HttpStatusCode.valueOf(200));
     }
 }

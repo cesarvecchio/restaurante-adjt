@@ -1,5 +1,7 @@
 package br.com.restauranteadjt.infrastructure.persistence.collection;
 
+import br.com.restauranteadjt.domain.valueObject.Endereco;
+import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -16,12 +18,13 @@ public class RestauranteCollection {
     @Id
     private String id;
     private String nome;
-    private String localizacao;
+    private Endereco localizacao;
     private String tipoCozinha;
     private List<LocalTime> horariosFuncionamento;
     private Integer capacidade;
+    private List<MesaVO> mesas;
 
-    public RestauranteCollection(String nome, String localizacao, String tipoCozinha,
+    public RestauranteCollection(String nome, Endereco localizacao, String tipoCozinha,
                                  List<LocalTime> horariosFuncionamento, Integer capacidade) {
         this.nome = nome;
         this.localizacao = localizacao;

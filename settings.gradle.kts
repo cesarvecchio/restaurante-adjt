@@ -1,1 +1,1 @@
-rootProject.name = "restauranteDomain-adjt"
+rootProject.name = "restaurante-adjt"
