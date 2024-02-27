@@ -5,7 +5,10 @@ import java.time.LocalTime;
 
 public record ReservaDomain(
         LocalDate dataReserva,
-        LocalTime horaReserva
+        LocalTime horaReserva,
+        String nome,
+        String email,
+        String telefone
 ) {
 
 }

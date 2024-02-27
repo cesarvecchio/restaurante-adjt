@@ -9,6 +9,7 @@ import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteR
 import br.com.restauranteadjt.infrastructure.presenter.RestaurantePresenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
 public class RestauranteConfig {
@@ -19,8 +20,9 @@ public class RestauranteConfig {
 
     @Bean
     RestauranteGateway restauranteGateway(RestauranteRepository restauranteRepository,
-                                          RestauranteCollectionMapper restauranteCollectionMapper) {
-        return new RestauranteRepositoryGateway(restauranteRepository, restauranteCollectionMapper);
+                                          RestauranteCollectionMapper restauranteCollectionMapper,
+                                          MongoTemplate mongoTemplate) {
+        return new RestauranteRepositoryGateway(restauranteRepository, restauranteCollectionMapper, mongoTemplate);
     }
 
     @Bean

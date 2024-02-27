@@ -9,14 +9,20 @@ public class ReservaDTOMapper {
         return new ReservaResponse(
                 id,
                 domain.dataReserva(),
-                domain.horaReserva()
+                domain.horaReserva(),
+                domain.nome(),
+                domain.email(),
+                domain.telefone()
         );
     }
 
     public ReservaDomain toDomain(CreateReservaRequest request){
         return new ReservaDomain(
                 request.dataReserva(),
-                request.horaReserva()
+                request.horaReserva(),
+                request.nome(),
+                request.email(),
+                request.telefone()
         );
     }
 }

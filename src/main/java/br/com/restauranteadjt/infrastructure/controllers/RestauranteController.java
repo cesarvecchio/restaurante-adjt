@@ -3,7 +3,6 @@ package br.com.restauranteadjt.infrastructure.controllers;
 import br.com.restauranteadjt.application.usecases.RestauranteUseCase;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 import br.com.restauranteadjt.domain.enums.TipoCozinhaEnum;
-import br.com.restauranteadjt.domain.valueObject.Endereco;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.RestauranteDTOMapper;
@@ -11,6 +10,8 @@ import br.com.restauranteadjt.infrastructure.presenter.RestaurantePresenter;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -39,14 +40,16 @@ public class RestauranteController {
     }
 
     @GetMapping
-    public ResponseEntity<RestauranteResponse> find(@RequestParam(required = false) String nome,
-                                                    @RequestParam(required = false) TipoCozinhaEnum tipoCozinha,
-                                                    @RequestParam(required = false) Endereco endereco){
-        RestauranteDomain restaurante = restauranteUseCase
+    public ResponseEntity<List<RestauranteResponse>> findByNomeOrTipoCozinhaOrLocalizacao(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) TipoCozinhaEnum tipoCozinha,
+            @RequestParam(required = false) String endereco
+    ){
+        List<RestauranteDomain> restauranteList = restauranteUseCase
                 .findByNomeOrTipoCozinhaOrLocalizacao(nome, tipoCozinha, endereco);
 
-        RestauranteResponse response = restauranteDTOMapper.toResponse(restaurante);
+       List<RestauranteResponse> restauranteResponseList = restauranteList.stream().map(restauranteDTOMapper::toResponse).toList();
 
-        return restaurantePresenter.toResponseEntity(response, HttpStatusCode.valueOf(200));
+        return restaurantePresenter.toResponseEntity(restauranteResponseList, HttpStatusCode.valueOf(200));
     }
 }

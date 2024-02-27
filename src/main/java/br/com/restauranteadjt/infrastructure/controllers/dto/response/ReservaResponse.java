@@ -8,18 +8,9 @@ import java.time.LocalTime;
 public record ReservaResponse(
         String id,
         LocalDate dataReserva,
-        LocalTime horaReserva/*,
-        Restaurante restaurante,
-        Mesa mesa*/
+        LocalTime horaReserva,
+        String nome,
+        String email,
+        String telefone
 ) {
-//    public record Restaurante(
-//            String id,
-//            String nome
-//    ){}
-//
-//    public record Mesa(
-//            Integer identificador,
-//            StatusMesa statusMesa,
-//            Integer qtdePessoas
-//    ){}
 }

@@ -2,12 +2,15 @@ package br.com.restauranteadjt.application.gateways;
 
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 import br.com.restauranteadjt.domain.enums.TipoCozinhaEnum;
-import br.com.restauranteadjt.domain.valueObject.Endereco;
+
+import java.util.List;
 
 public interface RestauranteGateway {
     RestauranteDomain create(RestauranteDomain restauranteDomain);
 
-    RestauranteDomain findByNomeOrTipoCozinhaOrLocalizacao(String nome, TipoCozinhaEnum tipoCozinha, Endereco localizacao);
+    List<RestauranteDomain> findByNomeOrTipoCozinhaOrLocalizacao(String nome, TipoCozinhaEnum tipoCozinha, String localizacao);
 
     RestauranteDomain findById(String id);
+
+    List<RestauranteDomain> findAll();
 }

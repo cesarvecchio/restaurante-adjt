@@ -5,6 +5,9 @@ import java.time.LocalTime;
 
 public record CreateReservaRequest(
         LocalDate dataReserva,
-        LocalTime horaReserva
+        LocalTime horaReserva,
+        String nome,
+        String email,
+        String telefone
 ) {
 }
