@@ -2,6 +2,9 @@ package br.com.restauranteadjt.application.usecases;
 
 import br.com.restauranteadjt.application.gateways.MesaGateway;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
+import br.com.restauranteadjt.domain.enums.StatusMesa;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -20,4 +23,11 @@ public class MesaUseCase {
         return mesaGateway.findMesaByIdRestauranteAndNumeroMesa(idRestaurante, numeroMesa);
     }
 
+    public List<MesaDomain> listMesasByStatus(String idRestaurante, StatusMesa statusMesa) {
+        return mesaGateway.listMesasByStatus(idRestaurante, statusMesa);
+    }
+
+    public MesaDomain updateStatusMesa(String idRestaurante, Integer numeroMesa, StatusMesa statusMesa){
+        return mesaGateway.updateStatusMesa(idRestaurante, numeroMesa, statusMesa);
+    }
 }

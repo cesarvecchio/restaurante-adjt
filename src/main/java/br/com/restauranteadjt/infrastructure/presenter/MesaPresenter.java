@@ -10,4 +10,7 @@ public class MesaPresenter {
     public ResponseEntity<List<MesaResponse>> toResponseEntity(List<MesaResponse> mesaResponseList, HttpStatusCode statusCode) {
         return ResponseEntity.status(statusCode).body(mesaResponseList);
     }
+    public ResponseEntity<MesaResponse> toResponseEntity(MesaResponse mesaResponse, HttpStatusCode statusCode) {
+        return ResponseEntity.status(statusCode).body(mesaResponse);
+    }
 }

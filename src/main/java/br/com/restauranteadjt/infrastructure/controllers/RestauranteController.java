@@ -2,7 +2,6 @@ package br.com.restauranteadjt.infrastructure.controllers;
 
 import br.com.restauranteadjt.application.usecases.RestauranteUseCase;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
-import br.com.restauranteadjt.domain.enums.TipoCozinhaEnum;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.RestauranteDTOMapper;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -42,7 +42,7 @@ public class RestauranteController {
     @GetMapping
     public ResponseEntity<List<RestauranteResponse>> findByNomeOrTipoCozinhaOrLocalizacao(
             @RequestParam(required = false) String nome,
-            @RequestParam(required = false) TipoCozinhaEnum tipoCozinha,
+            @RequestParam(required = false) String tipoCozinha,
             @RequestParam(required = false) String endereco
     ){
         List<RestauranteDomain> restauranteList = restauranteUseCase

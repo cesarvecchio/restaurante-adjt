@@ -2,10 +2,10 @@ package br.com.restauranteadjt.infrastructure.gateways;
 
 import br.com.restauranteadjt.application.gateways.RestauranteGateway;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
-import br.com.restauranteadjt.domain.enums.TipoCozinhaEnum;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.RestauranteCollectionMapper;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
+import br.com.restauranteadjt.main.exception.CadastradoException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -31,6 +31,14 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
     public RestauranteDomain create(RestauranteDomain restauranteDomain) {
         RestauranteCollection restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
 
+        if(!findByNomeOrTipoCozinhaOrLocalizacao(restauranteCollection.getNome(),
+                restauranteCollection.getTipoCozinha(), restauranteCollection.getLocalizacao()).isEmpty()){
+            throw new CadastradoException(String.format(
+                    "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
+                    restauranteCollection.getNome(),restauranteCollection.getTipoCozinha(),
+                    restauranteCollection.getLocalizacao()));
+        }
+
         RestauranteCollection savedRestauranteObj = restauranteRepository.save(restauranteCollection);
 
         return restauranteCollectionMapper.toDomainObj(savedRestauranteObj);
@@ -38,9 +46,10 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
 
     @Override
     public RestauranteDomain findById(String id) {
-        Optional<RestauranteCollection> restauranteCollection = restauranteRepository.findById(id);
-
-        return restauranteCollectionMapper.toDomainObj(restauranteCollection.orElseThrow(() -> new RuntimeException("Restaurante não encontrado")));
+        return restauranteCollectionMapper.toDomainObj(restauranteRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                String.format("Restaurante com id:%s não foi encontrado!", id))));
     }
 
     @Override
@@ -49,7 +58,7 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
     }
 
     @Override
-    public List<RestauranteDomain> findByNomeOrTipoCozinhaOrLocalizacao(String nome, TipoCozinhaEnum tipoCozinha, String localizacao) {
+    public List<RestauranteDomain> findByNomeOrTipoCozinhaOrLocalizacao(String nome, String tipoCozinha, String localizacao) {
         Query query = new Query();
 
         if(!ObjectUtils.isEmpty(nome)){

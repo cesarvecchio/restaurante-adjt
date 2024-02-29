@@ -2,7 +2,6 @@ package br.com.restauranteadjt.application.usecases;
 
 import br.com.restauranteadjt.application.gateways.RestauranteGateway;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
-import br.com.restauranteadjt.domain.enums.TipoCozinhaEnum;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class RestauranteUseCase {
         return restauranteGateway.create(restauranteDomain);
     }
 
-    public List<RestauranteDomain> findByNomeOrTipoCozinhaOrLocalizacao(String nome, TipoCozinhaEnum tipoCozinha, String localizacao) {
+    public List<RestauranteDomain> findByNomeOrTipoCozinhaOrLocalizacao(String nome, String tipoCozinha, String localizacao) {
         return restauranteGateway.findByNomeOrTipoCozinhaOrLocalizacao(nome, tipoCozinha, localizacao);
     }
 

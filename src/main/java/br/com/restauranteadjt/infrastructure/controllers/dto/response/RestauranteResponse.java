@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public record RestauranteResponse(
+        String id,
         String nome,
         String localizacao,
         String tipoCozinha,

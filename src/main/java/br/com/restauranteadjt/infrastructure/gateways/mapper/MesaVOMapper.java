@@ -13,8 +13,8 @@ public class MesaVOMapper {
 
     public MesaDomain toDomain(MesaVO mesaVO) {
         return new MesaDomain(
-                mesaVO.numero(),
-                mesaVO.statusMesa()
+                mesaVO.getNumero(),
+                mesaVO.getStatusMesa()
         );
     }
 }

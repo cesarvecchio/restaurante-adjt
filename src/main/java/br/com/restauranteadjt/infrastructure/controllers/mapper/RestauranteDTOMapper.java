@@ -7,11 +7,12 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.response.Restaurant
 public class RestauranteDTOMapper {
     public RestauranteResponse toResponse(RestauranteDomain domainObj){
         return new RestauranteResponse(
-                domainObj.nome(),
-                domainObj.localizacao(),
-                domainObj.tipoCozinha(),
-                domainObj.horariosFuncionamento(),
-                domainObj.capacidade()
+                domainObj.getId(),
+                domainObj.getNome(),
+                domainObj.getLocalizacao(),
+                domainObj.getTipoCozinha(),
+                domainObj.getHorariosFuncionamento(),
+                domainObj.getCapacidade()
         );
     }
 

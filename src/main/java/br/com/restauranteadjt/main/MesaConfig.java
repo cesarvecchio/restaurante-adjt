@@ -2,6 +2,7 @@ package br.com.restauranteadjt.main;
 
 import br.com.restauranteadjt.application.gateways.MesaGateway;
 import br.com.restauranteadjt.application.usecases.MesaUseCase;
+import br.com.restauranteadjt.application.usecases.RestauranteUseCase;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.MesaDTOMapper;
 import br.com.restauranteadjt.infrastructure.gateways.MesaRepositoryGateway;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.MesaVOMapper;
