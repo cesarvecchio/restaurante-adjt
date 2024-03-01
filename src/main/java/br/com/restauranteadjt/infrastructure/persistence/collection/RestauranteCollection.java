@@ -21,7 +21,6 @@ public class RestauranteCollection {
     private String tipoCozinha;
     private List<LocalTime> horariosFuncionamento;
     private Integer capacidade;
-    private List<MesaVO> mesas;
 
     public RestauranteCollection(String nome, String localizacao, String tipoCozinha,
                                  List<LocalTime> horariosFuncionamento, Integer capacidade) {

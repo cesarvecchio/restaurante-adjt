@@ -1,5 +1,6 @@
 package br.com.restauranteadjt.infrastructure.persistence.collection;
 
+import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.RestauranteVO;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class ReservaCollection {
     private String email;
     private String telefone;
     private RestauranteVO restaurante;
-    private MesaVO mesa;
+    private StatusMesa statusMesa;
 
     public ReservaCollection(LocalDate dataReserva, LocalTime horaReserva, String nome, String email, String telefone) {
         this.dataReserva = dataReserva;
