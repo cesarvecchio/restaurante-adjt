@@ -3,7 +3,8 @@ package br.com.restauranteadjt.domain.entity;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
 
 public record MesaDomain(
-        Integer numero,
+        String id,
+        String emailCliente,
         StatusMesa statusMesa
 ) {
 }

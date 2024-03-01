@@ -6,14 +6,16 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.MesaResponse;
 public class MesaDTOMapper {
     public MesaResponse toResponse(MesaDomain mesaDomain) {
         return new MesaResponse(
-                mesaDomain.numero(),
+                mesaDomain.id(),
+                mesaDomain.emailCliente(),
                 mesaDomain.statusMesa()
         );
     }
 
     public MesaDomain toDomain(MesaResponse mesaResponse) {
         return new MesaDomain(
-                mesaResponse.numero(),
+                mesaResponse.id(),
+                mesaResponse.emailCliente(),
                 mesaResponse.statusMesa()
         );
     }

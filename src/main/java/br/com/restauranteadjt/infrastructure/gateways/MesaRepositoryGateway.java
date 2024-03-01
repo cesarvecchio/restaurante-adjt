@@ -1,129 +1,97 @@
 package br.com.restauranteadjt.infrastructure.gateways;
 
 import br.com.restauranteadjt.application.gateways.MesaGateway;
-import br.com.restauranteadjt.application.usecases.RestauranteUseCase;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.MesaVOMapper;
-import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
+import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
+import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
-import br.com.restauranteadjt.main.exception.StatusMesaException;
+import br.com.restauranteadjt.main.exception.StatusReservaException;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class MesaRepositoryGateway implements MesaGateway {
     private final MesaVOMapper mesaVOMapper;
     private final RestauranteRepository restauranteRepository;
+    private final RestauranteRepositoryGateway restauranteRepositoryGateway;
+    private final MongoTemplate mongoTemplate;
+    private final ReservaRepository reservaRepository;
 
-    public MesaRepositoryGateway(MesaVOMapper mesaVOMapper, RestauranteRepository restauranteRepository) {
+    public MesaRepositoryGateway(MesaVOMapper mesaVOMapper, RestauranteRepository restauranteRepository,
+                                 RestauranteRepositoryGateway restauranteRepositoryGateway, MongoTemplate mongoTemplate,
+                                 ReservaRepository reservaRepository) {
         this.mesaVOMapper = mesaVOMapper;
         this.restauranteRepository = restauranteRepository;
-    }
-
-    private RestauranteCollection validateMesas(String idRestaurante){
-        RestauranteCollection restauranteCollection = restauranteRepository.findById(idRestaurante)
-                .orElseThrow(() -> new NaoEncontradoException(
-                        String.format("Restaurante com id:%s não foi encontrado!", idRestaurante)));
-
-        if(restauranteCollection.getMesas() == null || restauranteCollection.getMesas().isEmpty()){
-            throw new NaoEncontradoException(
-                    String.format("Restaurante com o id:%s não possui nenhuma mesa registrada!", idRestaurante));
-        }
-
-        return restauranteCollection;
+        this.restauranteRepositoryGateway = restauranteRepositoryGateway;
+        this.mongoTemplate = mongoTemplate;
+        this.reservaRepository = reservaRepository;
     }
 
     @Override
-    public List<MesaDomain> create(String idRestaurante){
-        RestauranteCollection restauranteCollection = restauranteRepository.findById(idRestaurante)
-                .orElseThrow(() -> new NaoEncontradoException(
-                        String.format("Restaurante com id:%s não foi encontrado!", idRestaurante)));
+    public List<MesaDomain> listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+            String idRestaurante, LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa) {
+        restauranteRepositoryGateway.existsById(idRestaurante);
 
-        if(restauranteCollection.getMesas() != null
-            && !restauranteCollection.getMesas().isEmpty()
-            && restauranteCollection.getCapacidade() == restauranteCollection.getMesas().size()
-        ) {
-            throw new RuntimeException(
-                    String.format("Restaurante com id:%s já possui a quantidade maxima de mesas registradas!",
-                            idRestaurante));
+        Query query = new Query();
+
+        Criteria criteria = Criteria
+                .where("restaurante.id").in(idRestaurante)
+                .and("dataReserva").in(dataReserva)
+                .and("horaReserva").in(horaReserva);
+
+        if(!Objects.isNull(statusMesa)) {
+            criteria.and("statusMesa").in(statusMesa);
         }
 
-        List<MesaVO> listaMesas = new ArrayList<>();
-        if(restauranteCollection.getMesas() != null) {
-            listaMesas.addAll(restauranteCollection.getMesas());
-        }
+        query.addCriteria(criteria);
 
-        int contador = listaMesas.size();
+        List<ReservaCollection> reservas = mongoTemplate.find(query, ReservaCollection.class);
 
-        while(restauranteCollection.getCapacidade() > contador) {
-            contador++;
-
-            listaMesas.add(new MesaVO(contador, StatusMesa.LIVRE));
-        }
-
-        restauranteCollection.setMesas(listaMesas);
-
-        restauranteRepository.save(restauranteCollection);
-
-        return listaMesas.stream().map(mesaVOMapper::toDomain).toList();
-    }
-
-    @Override
-    public MesaDomain findMesaByIdRestauranteAndNumeroMesa(String idRestaurante, Integer numeroMesa) {
-
-        return null;
-    }
-
-    @Override
-    public List<MesaDomain> listMesasByStatus(String idRestaurante, StatusMesa statusMesa) {
-        RestauranteCollection restauranteCollection = validateMesas(idRestaurante);
-
-        List<MesaVO> mesaVOList = restauranteCollection.getMesas();
-
-        if(statusMesa != null) {
-            mesaVOList = restauranteCollection.getMesas().stream().filter(mesa ->
-                    mesa.getStatusMesa().equals(statusMesa)).toList();
-
-            if(mesaVOList.isEmpty()){
-                throw new NaoEncontradoException(
-                        String.format("Restaurante com o id:%s não possui nenhuma mesa com o status:%s no momento!",
-                                idRestaurante, statusMesa));
+        if(reservas.isEmpty()){
+            if(Objects.isNull(statusMesa)) {
+                throw new NaoEncontradoException(String.format(
+                        "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s'",
+                        idRestaurante, dataReserva, horaReserva));
             }
+            throw new NaoEncontradoException(String.format(
+                    "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s' com o status:'%s'",
+                    idRestaurante, dataReserva, horaReserva, statusMesa));
         }
 
-        return mesaVOList.stream().map(mesaVOMapper::toDomain).toList();
+        return mongoTemplate.find(query, ReservaCollection.class)
+                .stream().map(reserva ->
+                        new MesaDomain(reserva.getId(), reserva.getEmail(), reserva.getStatusMesa()))
+                .toList();
     }
 
     @Override
-    public MesaDomain updateStatusMesa(String idRestaurante, Integer numeroMesa, StatusMesa statusMesa) {
-        RestauranteCollection restauranteCollection = validateMesas(idRestaurante);
+    public MesaDomain update(String idReserva, StatusMesa statusMesa) {
+        Optional<ReservaCollection> reservaCollection = reservaRepository.findById(idReserva);
 
-        MesaVO mesaVO = restauranteCollection.getMesas().stream().filter(mesa -> mesa.getNumero().equals(numeroMesa))
-                .findFirst().orElseThrow(() -> new NaoEncontradoException(
-                        String.format("Mesa de numero: '%d' não encontrada para o Restaurante com Id: '%s''",
-                                numeroMesa, idRestaurante)));
-
-        if(mesaVO.getStatusMesa().equals(statusMesa)) {
-            throw new StatusMesaException(
-                    String.format("Mesa numero: '%d' do Restaurante com Id: '%s' já possui o Status: '%s'",
-                            numeroMesa, idRestaurante, statusMesa));
+        if(reservaCollection.isEmpty()){
+            throw new NaoEncontradoException(String.format("Reserva com id:'%s' não foi encontrado",
+                    idReserva));
         }
 
-        mesaVO.setStatusMesa(statusMesa);
+        if(reservaCollection.get().getStatusMesa().equals(statusMesa)){
+            throw new StatusReservaException(String.format("Reserva com id:'%s' já possui o status:'%s'",
+                    idReserva, statusMesa));
+        }
 
-        restauranteCollection.getMesas().forEach(mesa -> {
-            if(mesa.getNumero().equals(numeroMesa)){
-                mesa = mesaVO;
-            }
-        });
+        reservaCollection.get().setStatusMesa(statusMesa);
+        ReservaCollection savedReservaCollection = reservaRepository.save(reservaCollection.get());
 
-        restauranteRepository.save(restauranteCollection);
-
-        return mesaVOMapper.toDomain(mesaVO);
+        return mesaVOMapper.toDomain(new MesaVO(savedReservaCollection.getId(), savedReservaCollection.getEmail(),
+                savedReservaCollection.getStatusMesa()));
     }
-
-
 }

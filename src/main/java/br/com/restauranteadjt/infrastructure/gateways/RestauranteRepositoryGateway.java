@@ -6,6 +6,7 @@ import br.com.restauranteadjt.infrastructure.gateways.mapper.RestauranteCollecti
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.main.exception.CadastradoException;
+import br.com.restauranteadjt.main.exception.NaoEncontradoException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -83,7 +84,14 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
     protected RestauranteCollection findRestauranteCollection(String idRestaurante){
         return restauranteRepository.findById(idRestaurante)
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                String.format("Restaurante com id:%s não foi encontrado!", idRestaurante)));
+                        new NaoEncontradoException(
+                                String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
+    }
+
+    protected void existsById(String id) {
+        if (!restauranteRepository.existsById(id)) {
+            throw new NaoEncontradoException(
+                    String.format("Restaurante com id:'%s' não foi encontrado!", id));
+        }
     }
 }

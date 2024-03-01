@@ -42,7 +42,7 @@ public class ReservaRepositoryGateway implements ReservaGateway {
         validateDataEhHorarioReservaLivre(restauranteCollection, reservaDomain.horaReserva(), reservaDomain.dataReserva());
 
         ReservaCollection reservaCollection = reservaColletionMapper.toCollection(reservaDomain);
-//        validateJaPossuiReserva(idRestaurante, reservaCollection);//TODO: comentado para facilitar os testes
+        validateJaPossuiReserva(idRestaurante, reservaCollection);
 
         reservaCollection.setRestaurante(new RestauranteVO(restauranteCollection.getId(),
                 restauranteCollection.getNome()));

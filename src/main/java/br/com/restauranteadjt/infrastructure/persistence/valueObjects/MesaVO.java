@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MesaVO {
-    private Integer numero;
+    private String id;
+    private String emailCliente;
     private StatusMesa statusMesa;
 }

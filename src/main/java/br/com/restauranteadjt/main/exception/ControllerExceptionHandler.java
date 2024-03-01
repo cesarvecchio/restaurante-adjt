@@ -56,14 +56,14 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(standardError);
     }
 
-    @ExceptionHandler(StatusMesaException.class)
-    public ResponseEntity<StandardError> statusMesa(StatusMesaException e, HttpServletRequest request) {
+    @ExceptionHandler(StatusReservaException.class)
+    public ResponseEntity<StandardError> statusReserva(StatusReservaException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         StandardError standardError = StandardError.builder()
                 .timestamp(Instant.now())
                 .status(status.value())
-                .error("Status Mesa!")
+                .error("Status Reserva!")
                 .message(e.getMessage())
                 .path(request.getRequestURI())
                 .build();

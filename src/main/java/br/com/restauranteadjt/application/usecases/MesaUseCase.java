@@ -4,8 +4,11 @@ import br.com.restauranteadjt.application.gateways.MesaGateway;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class MesaUseCase {
@@ -15,19 +18,14 @@ public class MesaUseCase {
         this.mesaGateway = mesaGateway;
     }
 
-    public List<MesaDomain> create(String idRestaurante) {
-        return mesaGateway.create(idRestaurante);
+    public List<MesaDomain> listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+            String idRestaurante, LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa) {
+
+        return mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(idRestaurante,
+                dataReserva, horaReserva, statusMesa);
     }
 
-    public MesaDomain findMesaByIdRestauranteAndNumeroMesa(String idRestaurante, Integer numeroMesa) {
-        return mesaGateway.findMesaByIdRestauranteAndNumeroMesa(idRestaurante, numeroMesa);
-    }
-
-    public List<MesaDomain> listMesasByStatus(String idRestaurante, StatusMesa statusMesa) {
-        return mesaGateway.listMesasByStatus(idRestaurante, statusMesa);
-    }
-
-    public MesaDomain updateStatusMesa(String idRestaurante, Integer numeroMesa, StatusMesa statusMesa){
-        return mesaGateway.updateStatusMesa(idRestaurante, numeroMesa, statusMesa);
+    public MesaDomain update(String idReserva, StatusMesa statusMesa) {
+        return mesaGateway.update(idReserva, statusMesa);
     }
 }
