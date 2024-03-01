@@ -10,10 +10,12 @@ import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepos
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.RestauranteVO;
+import br.com.restauranteadjt.main.exception.DataInvalidaException;
 import br.com.restauranteadjt.main.exception.JaPossuiReservaException;
 import br.com.restauranteadjt.main.exception.ReservaException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +38,8 @@ public class ReservaRepositoryGateway implements ReservaGateway {
 
     @Override
     public ReservaDomain create(String idRestaurante, ReservaDomain reservaDomain) {
+        validateDataReservaValida(LocalDateTime.of(reservaDomain.dataReserva(), reservaDomain.horaReserva()));
+
         RestauranteCollection restauranteCollection = restauranteRepositoryGateway.findRestauranteCollection(idRestaurante);
 
         validateHorarioReservaExiste(restauranteCollection, reservaDomain.horaReserva());
@@ -72,8 +76,8 @@ public class ReservaRepositoryGateway implements ReservaGateway {
 
     protected void validateDataEhHorarioReservaLivre(RestauranteCollection restauranteCollection, LocalTime horarioReserva,
                                                LocalDate dataReserva) {
-        Integer qtdReservas = reservaRepository.countByIdRestauranteAndHorarioReservaAndDataReservaAndStatusMesa(
-                restauranteCollection.getId(), horarioReserva, dataReserva, StatusMesa.OCUPADA);
+        Integer qtdReservas = reservaRepository.countByIdRestauranteAndHorarioReservaAndDataReserva(
+                restauranteCollection.getId(), horarioReserva, dataReserva);
 
         if(Objects.equals(qtdReservas, restauranteCollection.getCapacidade())) {
             throw new ReservaException(String.format(
@@ -84,12 +88,17 @@ public class ReservaRepositoryGateway implements ReservaGateway {
     }
 
     protected void validateJaPossuiReserva(String idRestaurante, ReservaCollection reserva){
-        if(reservaRepository.findByIdRestauranteAndReservaAndStatus(idRestaurante, reserva.getHoraReserva(),
-                reserva.getDataReserva(), reserva.getNome(), reserva.getEmail(), reserva.getTelefone(),
-                StatusMesa.OCUPADA).isPresent()) {
+        if(reservaRepository.findByIdRestauranteAndReserva(idRestaurante, reserva.getHoraReserva(),
+                reserva.getDataReserva(), reserva.getNome(), reserva.getEmail(), reserva.getTelefone()).isPresent()) {
             throw new JaPossuiReservaException(String.format(
                     "Você já possui uma reserva agendada no restaurante com id:'%s' para a data:'%s' e hora:'%s'",
                             idRestaurante, reserva.getDataReserva(), reserva.getHoraReserva()));
+        }
+    }
+
+    protected void validateDataReservaValida(LocalDateTime dataReserva){
+        if(LocalDateTime.now().isBefore(dataReserva)){
+            throw new DataInvalidaException("A data e hora de reserva não pode ser anterior a data e hora atual");
         }
     }
 }

@@ -18,12 +18,12 @@ public interface ReservaRepository extends MongoRepository<ReservaCollection, St
 
     @Query("{ 'restaurante.id':  ?0, horaReserva: ?1, dataReserva: ?2, nome: ?3," +
             " email: ?4, telefone: ?5, 'statusMesa': ?6 }")
-    Optional<ReservaCollection> findByIdRestauranteAndReservaAndStatus(
+    Optional<ReservaCollection> findByIdRestauranteAndReserva(
             String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva, String nome,
-            String email, String telefone, StatusMesa statusMesa
+            String email, String telefone
     );
 
-    @Query(value = "{ 'restaurante.id' :  ?0, horaReserva : ?1, dataReserva : ?2, 'statusMesa': ?3 }", count = true)
-    Integer countByIdRestauranteAndHorarioReservaAndDataReservaAndStatusMesa(
-            String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva, StatusMesa statusMesa);
+    @Query(value = "{ 'restaurante.id' :  ?0, horaReserva : ?1, dataReserva : ?2 }", count = true)
+    Integer countByIdRestauranteAndHorarioReservaAndDataReserva(
+            String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva);
 }

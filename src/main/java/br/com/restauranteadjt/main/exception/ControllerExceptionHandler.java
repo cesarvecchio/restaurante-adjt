@@ -72,7 +72,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ReservaException.class)
-    public ResponseEntity<StandardError> Reserva(ReservaException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> reserva(ReservaException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         StandardError standardError = StandardError.builder()
@@ -87,13 +87,28 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(JaPossuiReservaException.class)
-    public ResponseEntity<StandardError> Reserva(JaPossuiReservaException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> jaPossuiReserva(JaPossuiReservaException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         StandardError standardError = StandardError.builder()
                 .timestamp(Instant.now())
                 .status(status.value())
                 .error("Já Possui Reserva!")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(DataInvalidaException.class)
+    public ResponseEntity<StandardError> dataInvalida(DataInvalidaException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+
+        StandardError standardError = StandardError.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Data Invalida!")
                 .message(e.getMessage())
                 .path(request.getRequestURI())
                 .build();
