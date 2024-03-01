@@ -12,7 +12,7 @@ public class ReservaUseCase {
         this.reservaGateway = reservaGateway;
     }
 
-    public ReservaDomain createReserva(ReservaDomain reservaDomain, RestauranteDomain restauranteDomain, MesaDomain mesaDomain){
-        return reservaGateway.createReserva(reservaDomain, restauranteDomain, mesaDomain);
+    public ReservaDomain create(String idRestaurante, ReservaDomain reservaDomain){
+        return reservaGateway.create(idRestaurante, reservaDomain);
     }
 }

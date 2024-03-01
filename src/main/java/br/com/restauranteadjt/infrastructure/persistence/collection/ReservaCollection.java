@@ -16,9 +16,19 @@ import java.time.LocalTime;
 public class ReservaCollection {
     @Id
     private String id;
-    LocalDate dataReserva;
-    LocalTime horaReserva;
-    RestauranteVO restauranteVO;
-    MesaVO mesa;
+    private LocalDate dataReserva;
+    private LocalTime horaReserva;
+    private String nome;
+    private String email;
+    private String telefone;
+    private RestauranteVO restaurante;
+    private MesaVO mesa;
 
+    public ReservaCollection(LocalDate dataReserva, LocalTime horaReserva, String nome, String email, String telefone) {
+        this.dataReserva = dataReserva;
+        this.horaReserva = horaReserva;
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+    }
 }

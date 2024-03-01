@@ -39,4 +39,11 @@ public class RestauranteConfig {
     RestaurantePresenter restaurantePresenter(){
         return new RestaurantePresenter();
     }
+
+    @Bean
+    RestauranteRepositoryGateway restauranteRepositoryGateway(RestauranteRepository restauranteRepository,
+                                                              RestauranteCollectionMapper restauranteCollectionMapper,
+                                                              MongoTemplate mongoTemplate){
+        return new RestauranteRepositoryGateway(restauranteRepository, restauranteCollectionMapper, mongoTemplate);
+    }
 }

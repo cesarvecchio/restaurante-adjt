@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record ReservaResponse(
-        String id,
         LocalDate dataReserva,
         LocalTime horaReserva,
         String nome,

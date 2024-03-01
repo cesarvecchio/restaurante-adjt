@@ -79,4 +79,11 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
                 .map(restauranteCollectionMapper::toDomainObj)
                 .toList();
     }
+
+    protected RestauranteCollection findRestauranteCollection(String idRestaurante){
+        return restauranteRepository.findById(idRestaurante)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                String.format("Restaurante com id:%s não foi encontrado!", idRestaurante)));
+    }
 }
