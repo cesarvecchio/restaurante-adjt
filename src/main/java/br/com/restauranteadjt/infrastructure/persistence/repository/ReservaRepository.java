@@ -17,7 +17,7 @@ public interface ReservaRepository extends MongoRepository<ReservaCollection, St
             String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva, StatusMesa statusMesa);
 
     @Query("{ 'restaurante.id':  ?0, horaReserva: ?1, dataReserva: ?2, nome: ?3," +
-            " email: ?4, telefone: ?5, 'statusMesa': ?6 }")
+            " email: ?4, telefone: ?5 }")
     Optional<ReservaCollection> findByIdRestauranteAndReserva(
             String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva, String nome,
             String email, String telefone

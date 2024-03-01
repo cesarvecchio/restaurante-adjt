@@ -97,7 +97,7 @@ public class ReservaRepositoryGateway implements ReservaGateway {
     }
 
     protected void validateDataReservaValida(LocalDateTime dataReserva){
-        if(LocalDateTime.now().isBefore(dataReserva)){
+        if(dataReserva.isBefore(LocalDateTime.now())){
             throw new DataInvalidaException("A data e hora de reserva não pode ser anterior a data e hora atual");
         }
     }
