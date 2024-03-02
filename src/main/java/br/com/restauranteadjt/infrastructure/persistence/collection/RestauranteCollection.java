@@ -1,5 +1,6 @@
 package br.com.restauranteadjt.infrastructure.persistence.collection;
 
+import br.com.restauranteadjt.infrastructure.persistence.valueObjects.AvaliacaoVO;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class RestauranteCollection {
     private String tipoCozinha;
     private List<LocalTime> horariosFuncionamento;
     private Integer capacidade;
+    private List<AvaliacaoVO> avaliacoes;
 
     public RestauranteCollection(String nome, String localizacao, String tipoCozinha,
                                  List<LocalTime> horariosFuncionamento, Integer capacidade) {

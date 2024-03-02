@@ -1,4 +1,4 @@
-package br.com.restauranteadjt.main;
+package br.com.restauranteadjt.main.config;
 
 import br.com.restauranteadjt.application.gateways.RestauranteGateway;
 import br.com.restauranteadjt.application.usecases.RestauranteUseCase;

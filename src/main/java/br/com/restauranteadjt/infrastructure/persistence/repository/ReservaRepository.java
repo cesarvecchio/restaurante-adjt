@@ -26,4 +26,5 @@ public interface ReservaRepository extends MongoRepository<ReservaCollection, St
     @Query(value = "{ 'restaurante.id' :  ?0, horaReserva : ?1, dataReserva : ?2 }", count = true)
     Integer countByIdRestauranteAndHorarioReservaAndDataReserva(
             String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva);
+
 }
