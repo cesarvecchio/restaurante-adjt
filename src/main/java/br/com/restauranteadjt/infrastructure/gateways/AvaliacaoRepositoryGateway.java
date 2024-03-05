@@ -15,7 +15,6 @@ import br.com.restauranteadjt.main.exception.StatusReservaException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
     private final RestauranteRepository restauranteRepository;
@@ -34,9 +33,7 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
 
     @Override
     public AvaliacaoDomain create(String idReserva, AvaliacaoDomain avaliacaoDomain) {
-        Optional<ReservaCollection> reservaCollectionOptional = reservaRepository.findById(idReserva);
-
-        ReservaCollection reservaCollection = reservaCollectionOptional.orElseThrow(() ->
+        ReservaCollection reservaCollection = reservaRepository.findById(idReserva).orElseThrow(() ->
                 new NaoEncontradoException(String.format("Reserva com id:'%s' não foi encontrada", idReserva)));
 
         if(!reservaCollection.getStatusMesa().equals(StatusMesa.FINALIZADA)) {
@@ -65,5 +62,19 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
         restauranteRepository.save(restauranteCollection);
 
         return avaliacaoVOMapper.toDomain(avaliacaoVO);
+    }
+
+    @Override
+    public List<AvaliacaoDomain> listByIdRestaurante(String idRestaurante) {
+        RestauranteCollection restauranteCollection = restauranteRepositoryGateway
+                .findRestauranteCollection(idRestaurante);
+
+        if(restauranteCollection.getAvaliacoes() == null || restauranteCollection.getAvaliacoes().isEmpty()) {
+            throw new StatusReservaException(String.format(
+                    "O Restaurante com id:'%s' não possui nenhuma avaliação até o momento",
+                    idRestaurante));
+        }
+
+        return restauranteCollection.getAvaliacoes().stream().map(avaliacaoVOMapper::toDomain).toList();
     }
 }
