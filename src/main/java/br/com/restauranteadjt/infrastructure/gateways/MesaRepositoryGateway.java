@@ -6,7 +6,6 @@ import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.MesaVOMapper;
 import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
-import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
 import br.com.restauranteadjt.main.exception.StatusReservaException;
@@ -22,16 +21,13 @@ import java.util.Optional;
 
 public class MesaRepositoryGateway implements MesaGateway {
     private final MesaVOMapper mesaVOMapper;
-    private final RestauranteRepository restauranteRepository;
     private final RestauranteRepositoryGateway restauranteRepositoryGateway;
     private final MongoTemplate mongoTemplate;
     private final ReservaRepository reservaRepository;
 
-    public MesaRepositoryGateway(MesaVOMapper mesaVOMapper, RestauranteRepository restauranteRepository,
-                                 RestauranteRepositoryGateway restauranteRepositoryGateway, MongoTemplate mongoTemplate,
-                                 ReservaRepository reservaRepository) {
+    public MesaRepositoryGateway(MesaVOMapper mesaVOMapper, RestauranteRepositoryGateway restauranteRepositoryGateway,
+                                 MongoTemplate mongoTemplate, ReservaRepository reservaRepository) {
         this.mesaVOMapper = mesaVOMapper;
-        this.restauranteRepository = restauranteRepository;
         this.restauranteRepositoryGateway = restauranteRepositoryGateway;
         this.mongoTemplate = mongoTemplate;
         this.reservaRepository = reservaRepository;
@@ -59,38 +55,34 @@ public class MesaRepositoryGateway implements MesaGateway {
 
         if(reservas.isEmpty()){
             if(Objects.isNull(statusMesa)) {
-                throw new NaoEncontradoException(String.format(
-                        "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s'",
-                        idRestaurante, dataReserva, horaReserva));
+                throw new NaoEncontradoException(
+                        String.format("O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s'",
+                                idRestaurante, dataReserva, horaReserva));
             }
             throw new NaoEncontradoException(String.format(
                     "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s' com o status:'%s'",
                     idRestaurante, dataReserva, horaReserva, statusMesa));
         }
 
-        return mongoTemplate.find(query, ReservaCollection.class)
-                .stream().map(reserva ->
-                        new MesaDomain(reserva.getId(), reserva.getEmail(), reserva.getStatusMesa()))
+        return reservas.stream().map(reserva ->
+                new MesaDomain(reserva.getId(), reserva.getEmail(), reserva.getStatusMesa()))
                 .toList();
     }
 
     @Override
     public MesaDomain update(String idReserva, StatusMesa statusMesa) {
         Optional<ReservaCollection> reservaCollection = reservaRepository.findById(idReserva);
-
-        if(reservaCollection.isEmpty()){
-            throw new NaoEncontradoException(String.format("Reserva com id:'%s' não foi encontrado",
-                    idReserva));
+        if (reservaCollection.isEmpty()) {
+            throw new NaoEncontradoException(String.format("Reserva com id:'%s' não foi encontrado", idReserva));
         }
 
-        if(reservaCollection.get().getStatusMesa().equals(statusMesa)){
+        if (reservaCollection.get().getStatusMesa().equals(statusMesa)) {
             throw new StatusReservaException(String.format("Reserva com id:'%s' já possui o status:'%s'",
                     idReserva, statusMesa));
         }
 
         reservaCollection.get().setStatusMesa(statusMesa);
         ReservaCollection savedReservaCollection = reservaRepository.save(reservaCollection.get());
-
         return mesaVOMapper.toDomain(new MesaVO(savedReservaCollection.getId(), savedReservaCollection.getEmail(),
                 savedReservaCollection.getStatusMesa()));
     }

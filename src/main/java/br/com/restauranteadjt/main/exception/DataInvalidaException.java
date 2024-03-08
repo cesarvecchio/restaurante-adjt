@@ -4,8 +4,4 @@ public class DataInvalidaException extends RuntimeException {
     public DataInvalidaException(String message) {
         super(message);
     }
-
-    public DataInvalidaException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

@@ -41,21 +41,6 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(standardError);
     }
 
-    @ExceptionHandler(CampoVazioException.class)
-    public ResponseEntity<StandardError> campoVazio(CampoVazioException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-
-        StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Campo vazio!")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
-
-        return ResponseEntity.status(status).body(standardError);
-    }
-
     @ExceptionHandler(StatusReservaException.class)
     public ResponseEntity<StandardError> statusReserva(StatusReservaException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;

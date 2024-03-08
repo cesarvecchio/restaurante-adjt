@@ -21,11 +21,9 @@ public class MesaConfig {
     }
 
     @Bean
-    MesaGateway mesaGateway(MesaVOMapper mesaVOMapper, RestauranteRepository restauranteRepository,
-                            RestauranteRepositoryGateway restauranteRepositoryGateway, MongoTemplate mongoTemplate,
-                            ReservaRepository reservaRepository){
-        return new MesaRepositoryGateway(mesaVOMapper, restauranteRepository, restauranteRepositoryGateway,
-                mongoTemplate, reservaRepository);
+    MesaGateway mesaGateway(MesaVOMapper mesaVOMapper, RestauranteRepositoryGateway restauranteRepositoryGateway,
+                            MongoTemplate mongoTemplate, ReservaRepository reservaRepository){
+        return new MesaRepositoryGateway(mesaVOMapper, restauranteRepositoryGateway, mongoTemplate, reservaRepository);
     }
 
     @Bean
