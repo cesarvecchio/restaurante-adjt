@@ -2,10 +2,12 @@ package br.com.restauranteadjt.infrastructure.gateways;
 
 import br.com.restauranteadjt.application.gateways.ReservaGateway;
 import br.com.restauranteadjt.domain.entity.ReservaDomain;
+import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.ReservaColletionMapper;
 import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
+import br.com.restauranteadjt.infrastructure.persistence.valueObjects.RestauranteVO;
 import br.com.restauranteadjt.main.exception.DataInvalidaException;
 import br.com.restauranteadjt.main.exception.JaPossuiReservaException;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
@@ -22,6 +24,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -47,11 +50,6 @@ public class ReservaRepositoryGatewayTest {
     void tearDown() throws Exception {
         autoCloseable.close();
     }
-
-//    @Test
-//    void devePermitirCriarReserva(){
-//        fail("Não implementado");
-//    }
 
     @Test
     void deveGerarExcecao_QuandoCriarReserva_DataReservaAnteriorAhDataAtual(){
@@ -162,6 +160,50 @@ public class ReservaRepositoryGatewayTest {
         verify(reservaRepository, times(1))
                 .findByIdRestauranteAndReserva(any(String.class), any(LocalTime.class), any(LocalDate.class),
                         any(String.class), any(String.class), any(String.class));
+    }
+
+    @Test
+    void devePermitirCriarReserva() {
+        var id = ObjectId.get().toString();
+        var reserva = criarReservaDomainDataFutura();
+
+        var restaurante = criarRestaurante();
+        restaurante.setId(id);
+
+        var idReservaCollection = ObjectId.get().toString();
+        var reservaCollection = criarReservaCollectio();
+        reservaCollection.setId(idReservaCollection);
+        reservaCollection.setRestaurante(new RestauranteVO(restaurante.getId(), restaurante.getNome()));
+        reservaCollection.setStatusMesa(StatusMesa.OCUPADA);
+
+        var reservaDomain = reservaColletionMapper.toDomain(reservaCollection);
+
+        when(restauranteRepositoryGateway.findRestauranteCollection(id))
+                .thenReturn(restaurante);
+        when(reservaRepository.countByIdRestauranteAndHorarioReservaAndDataReserva(restaurante.getId(),
+                reserva.horaReserva(), reserva.dataReserva()))
+                .thenReturn(restaurante.getCapacidade() - 1);
+        when(reservaColletionMapper.toCollection(reserva))
+                .thenReturn(reservaCollection);
+        when(reservaRepository.findByIdRestauranteAndReserva(restaurante.getId(),
+                reserva.horaReserva(), reserva.dataReserva(), reserva.nome(), reserva.email(), reserva.telefone()))
+                .thenReturn(Optional.empty());
+        when(reservaRepository.save(reservaCollection)).thenReturn(reservaCollection);
+
+        var reservaDomainObtida = reservaGateway.create(id, reserva);
+
+        assertEquals(reservaDomain, reservaDomainObtida);
+
+        verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(any(String.class));
+        verify(reservaRepository, times(1))
+                .countByIdRestauranteAndHorarioReservaAndDataReserva(any(String.class), any(LocalTime.class),
+                        any(LocalDate.class));
+        verify(reservaColletionMapper, times(1)).toCollection(any(ReservaDomain.class));
+        verify(reservaRepository, times(1))
+                .findByIdRestauranteAndReserva(any(String.class), any(LocalTime.class), any(LocalDate.class),
+                        any(String.class), any(String.class), any(String.class));
+        verify(reservaRepository, times(1))
+                .save(any(ReservaCollection.class));
     }
 
     private ReservaDomain criarReservaDomainDataFutura(){
