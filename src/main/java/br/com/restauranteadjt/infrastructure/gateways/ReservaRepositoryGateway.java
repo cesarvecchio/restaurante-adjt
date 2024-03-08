@@ -21,16 +21,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class ReservaRepositoryGateway implements ReservaGateway {
-    private final RestauranteRepository restauranteRepository;
     private final RestauranteRepositoryGateway restauranteRepositoryGateway;
     private final ReservaRepository reservaRepository;
     private final ReservaColletionMapper reservaColletionMapper;
 
-    public ReservaRepositoryGateway(RestauranteRepository restauranteRepository,
-                                    RestauranteRepositoryGateway restauranteRepositoryGateway,
+    public ReservaRepositoryGateway(RestauranteRepositoryGateway restauranteRepositoryGateway,
                                     ReservaRepository reservaRepository,
                                     ReservaColletionMapper reservaColletionMapper) {
-        this.restauranteRepository = restauranteRepository;
         this.restauranteRepositoryGateway = restauranteRepositoryGateway;
         this.reservaRepository = reservaRepository;
         this.reservaColletionMapper = reservaColletionMapper;
@@ -55,15 +52,6 @@ public class ReservaRepositoryGateway implements ReservaGateway {
         ReservaCollection savedReservaCollection = reservaRepository.save(reservaCollection);
 
         return reservaColletionMapper.toDomain(savedReservaCollection);
-    }
-
-    @Override
-    public List<ReservaDomain> findByIdRestauranteAndHorarioReservaAndDataReservaAndStatusMesa(
-            String idRestaurante, LocalTime horarioReserva, LocalDate dataReserva, StatusMesa statusMesa) {
-
-        return reservaRepository.findByIdRestauranteAndHorarioReservaAndDataReservaAndStatusMesa(
-                idRestaurante, horarioReserva, dataReserva, statusMesa).stream()
-                .map(reservaColletionMapper::toDomain).toList();
     }
 
     protected void validateHorarioReservaExiste(RestauranteCollection restauranteCollection, LocalTime horarioReserva){
@@ -92,7 +80,7 @@ public class ReservaRepositoryGateway implements ReservaGateway {
                 reserva.getDataReserva(), reserva.getNome(), reserva.getEmail(), reserva.getTelefone()).isPresent()) {
             throw new JaPossuiReservaException(String.format(
                     "Você já possui uma reserva agendada no restaurante com id:'%s' para a data:'%s' e hora:'%s'",
-                            idRestaurante, reserva.getDataReserva(), reserva.getHoraReserva()));
+                    idRestaurante, reserva.getDataReserva(), reserva.getHoraReserva()));
         }
     }
 

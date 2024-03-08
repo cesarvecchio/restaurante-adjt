@@ -20,11 +20,10 @@ public class ReservaConfig {
     }
 
     @Bean
-    ReservaGateway reservaGateway(RestauranteRepository restauranteRepository,
-                                  RestauranteRepositoryGateway restauranteRepositoryGateway,
+    ReservaGateway reservaGateway(RestauranteRepositoryGateway restauranteRepositoryGateway,
                                   ReservaRepository reservaRepository,
                                   ReservaColletionMapper reservaColletionMapper){
-        return new ReservaRepositoryGateway(restauranteRepository, restauranteRepositoryGateway,
+        return new ReservaRepositoryGateway(restauranteRepositoryGateway,
                 reservaRepository, reservaColletionMapper);
     }
 
