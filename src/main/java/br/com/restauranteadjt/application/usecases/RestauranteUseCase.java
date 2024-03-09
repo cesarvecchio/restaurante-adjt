@@ -24,8 +24,4 @@ public class RestauranteUseCase {
         return restauranteGateway.findById(id);
     }
 
-    public List<RestauranteDomain> findAll(){
-        return restauranteGateway.findAll();
-    }
-
 }

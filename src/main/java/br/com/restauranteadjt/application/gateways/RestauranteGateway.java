@@ -11,5 +11,5 @@ public interface RestauranteGateway {
 
     RestauranteDomain findById(String id);
 
-    List<RestauranteDomain> findAll();
+    void existsById(String id);
 }

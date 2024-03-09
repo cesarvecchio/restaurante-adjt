@@ -47,15 +47,7 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
 
     @Override
     public RestauranteDomain findById(String id) {
-        return restauranteCollectionMapper.toDomainObj(restauranteRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                String.format("Restaurante com id:%s não foi encontrado!", id))));
-    }
-
-    @Override
-    public List<RestauranteDomain> findAll() {
-        return restauranteRepository.findAll().stream().map(restauranteCollectionMapper::toDomainObj).toList();
+        return restauranteCollectionMapper.toDomainObj(findRestauranteCollection(id));
     }
 
     @Override
@@ -88,7 +80,8 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
                                 String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
     }
 
-    protected void existsById(String id) {
+    @Override
+    public void existsById(String id) {
         if (!restauranteRepository.existsById(id)) {
             throw new NaoEncontradoException(
                     String.format("Restaurante com id:'%s' não foi encontrado!", id));
