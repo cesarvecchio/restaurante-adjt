@@ -29,8 +29,11 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.12.2")
-	testImplementation("io.rest-assured:rest-assured:5.4.0")
+	testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.5.2")
+	testImplementation("io.rest-assured:rest-assured:5.3.0") {
+		exclude(group = "org.codehaus.groovy", module = "groovy")
+		exclude(group = "org.codehaus.groovy", module = "groovy-xml")
+	}
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 	testImplementation("org.assertj:assertj-core:3.24.2")
