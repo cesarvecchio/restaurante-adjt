@@ -9,6 +9,7 @@ import br.com.restauranteadjt.main.exception.CadastradoException;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -49,119 +50,131 @@ public class RestauranteRepositoryGatewayTest {
         autoCloseable.close();
     }
 
-    @Test
-    void deveGerarExcecao_QuandoCriarRestauranteJaExistente() {
-        var restauranteDomain = buildRestauranteDomain();
-        var restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
-        var query = buildQuery(restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
-                restauranteCollection.getLocalizacao());
+    @Nested
+    class CriarRestaurante {
+        @Test
+        void deveGerarExcecao_QuandoCriarRestauranteJaExistente() {
+            var restauranteDomain = buildRestauranteDomain();
+            var restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
+            var query = buildQuery(restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
+                    restauranteCollection.getLocalizacao());
 
-        when(mongoTemplate.find(query, RestauranteCollection.class)).thenReturn(List.of(restauranteCollection));
+            when(mongoTemplate.find(query, RestauranteCollection.class)).thenReturn(List.of(restauranteCollection));
 
-        assertThatThrownBy(() -> restauranteGateway.create(restauranteDomain))
-                .isInstanceOf(CadastradoException.class)
-                .hasMessage(String.format(
-                        "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
-                        restauranteCollection.getNome(),restauranteCollection.getTipoCozinha(),
-                        restauranteCollection.getLocalizacao()));
+            assertThatThrownBy(() -> restauranteGateway.create(restauranteDomain))
+                    .isInstanceOf(CadastradoException.class)
+                    .hasMessage(String.format(
+                            "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
+                            restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
+                            restauranteCollection.getLocalizacao()));
 
-        verify(mongoTemplate, times(1)).find(query, RestauranteCollection.class);
+            verify(mongoTemplate, times(1)).find(query, RestauranteCollection.class);
+        }
+
+        @Test
+        void deveCriarRestaurante() {
+            var restauranteDomain = buildRestauranteDomain();
+            var restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
+            var query = buildQuery(restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
+                    restauranteCollection.getLocalizacao());
+
+            when(mongoTemplate.find(query, RestauranteCollection.class)).thenReturn(List.of());
+
+            when(restauranteRepository.save(restauranteCollection)).thenReturn(restauranteCollection);
+
+            var restauranteDomainRecebido = restauranteGateway.create(restauranteDomain);
+
+            assertEquals(restauranteDomain, restauranteDomainRecebido);
+
+            verify(mongoTemplate, times(1)).find(query, RestauranteCollection.class);
+            verify(restauranteRepository, times(1)).save(restauranteCollection);
+        }
     }
 
-    @Test
-    void deveCriarRestaurante() {
-        var restauranteDomain = buildRestauranteDomain();
-        var restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
-        var query = buildQuery(restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
-                restauranteCollection.getLocalizacao());
+    @Nested
+    class EncontrarRestaurantePorId {
+        @Test
+        void deveGerarExcecao_QuandoNaoEncontrarRestaurantePorId() {
+            var id = "1";
 
-        when(mongoTemplate.find(query, RestauranteCollection.class)).thenReturn(List.of());
+            when(restauranteRepository.findById(id)).thenReturn(Optional.empty());
 
-        when(restauranteRepository.save(restauranteCollection)).thenReturn(restauranteCollection);
+            assertThatThrownBy(() -> restauranteGateway.findById(id))
+                    .isInstanceOf(NaoEncontradoException.class)
+                    .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
 
-        var restauranteDomainRecebido = restauranteGateway.create(restauranteDomain);
+            verify(restauranteRepository, times(1)).findById(id);
+        }
 
-        assertEquals(restauranteDomain, restauranteDomainRecebido);
+        @Test
+        void deveEncontrarRestaurantePorId() {
+            var id = "1";
+            var restauranteDomain = buildRestauranteDomain();
+            var restauranteColletion = restauranteCollectionMapper.toCollection(restauranteDomain);
+            restauranteColletion.setId(id);
 
-        verify(mongoTemplate, times(1)).find(query, RestauranteCollection.class);
-        verify(restauranteRepository, times(1)).save(restauranteCollection);
+            when(restauranteRepository.findById(id)).thenReturn(Optional.of(restauranteColletion));
+
+            var restauranteObtido = restauranteGateway.findById(id);
+
+            assertEquals(restauranteDomain.getNome(), restauranteObtido.getNome());
+            assertEquals(restauranteDomain.getLocalizacao(), restauranteObtido.getLocalizacao());
+            assertEquals(restauranteDomain.getTipoCozinha(), restauranteObtido.getTipoCozinha());
+            assertEquals(restauranteDomain.getHorariosFuncionamento(), restauranteObtido.getHorariosFuncionamento());
+            assertEquals(restauranteDomain.getCapacidade(), restauranteObtido.getCapacidade());
+
+            verify(restauranteRepository, times(1)).findById(id);
+        }
     }
 
-    @Test
-    void deveGerarExcecao_QuandoNaoEncontrarRestaurantePorId(){
-        var id = "1";
+    @Nested
+    class ListarTodosRestaurante {
+        @Test
+        void deveListarTodosRestaurante() {
+            var id = "1";
+            var restauranteDomain = buildRestauranteDomain();
+            var restauranteColletion = restauranteCollectionMapper.toCollection(restauranteDomain);
+            restauranteColletion.setId(id);
 
-        when(restauranteRepository.findById(id)).thenReturn(Optional.empty());
+            when(restauranteRepository.findById(id)).thenReturn(Optional.of(restauranteColletion));
 
-        assertThatThrownBy(() -> restauranteGateway.findById(id))
-                .isInstanceOf(NaoEncontradoException.class)
-                .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
+            var restauranteObtido = restauranteGateway.findById(id);
 
-        verify(restauranteRepository, times(1)).findById(id);
+            assertEquals(restauranteDomain.getNome(), restauranteObtido.getNome());
+            assertEquals(restauranteDomain.getLocalizacao(), restauranteObtido.getLocalizacao());
+            assertEquals(restauranteDomain.getTipoCozinha(), restauranteObtido.getTipoCozinha());
+            assertEquals(restauranteDomain.getHorariosFuncionamento(), restauranteObtido.getHorariosFuncionamento());
+            assertEquals(restauranteDomain.getCapacidade(), restauranteObtido.getCapacidade());
+
+            verify(restauranteRepository, times(1)).findById(id);
+        }
     }
+    
+    @Nested
+    class ValidarSeRestauranteExistePorId {
+        @Test
+        void deveGerarExcecao_QuandoValidarSeRestauranteExistePorId() {
+            var id = "1";
 
-    @Test
-    void deveEncontrarRestaurantePorId(){
-        var id = "1";
-        var restauranteDomain = buildRestauranteDomain();
-        var restauranteColletion = restauranteCollectionMapper.toCollection(restauranteDomain);
-        restauranteColletion.setId(id);
+            when(restauranteRepository.existsById(id)).thenReturn(false);
 
-        when(restauranteRepository.findById(id)).thenReturn(Optional.of(restauranteColletion));
+            assertThatThrownBy(() -> restauranteGateway.existsById(id))
+                    .isInstanceOf(NaoEncontradoException.class)
+                    .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
 
-        var restauranteObtido = restauranteGateway.findById(id);
+            verify(restauranteRepository, times(1)).existsById(id);
+        }
 
-        assertEquals(restauranteDomain.getNome(), restauranteObtido.getNome());
-        assertEquals(restauranteDomain.getLocalizacao(), restauranteObtido.getLocalizacao());
-        assertEquals(restauranteDomain.getTipoCozinha(), restauranteObtido.getTipoCozinha());
-        assertEquals(restauranteDomain.getHorariosFuncionamento(), restauranteObtido.getHorariosFuncionamento());
-        assertEquals(restauranteDomain.getCapacidade(), restauranteObtido.getCapacidade());
+        @Test
+        void deveValidarSeRestauranteExistePorId() {
+            var id = "1";
 
-        verify(restauranteRepository, times(1)).findById(id);
-    }
+            when(restauranteRepository.existsById(id)).thenReturn(true);
 
-    @Test
-    void deveListarTodosOs(){
-        var id = "1";
-        var restauranteDomain = buildRestauranteDomain();
-        var restauranteColletion = restauranteCollectionMapper.toCollection(restauranteDomain);
-        restauranteColletion.setId(id);
+            restauranteGateway.existsById(id);
 
-        when(restauranteRepository.findById(id)).thenReturn(Optional.of(restauranteColletion));
-
-        var restauranteObtido = restauranteGateway.findById(id);
-
-        assertEquals(restauranteDomain.getNome(), restauranteObtido.getNome());
-        assertEquals(restauranteDomain.getLocalizacao(), restauranteObtido.getLocalizacao());
-        assertEquals(restauranteDomain.getTipoCozinha(), restauranteObtido.getTipoCozinha());
-        assertEquals(restauranteDomain.getHorariosFuncionamento(), restauranteObtido.getHorariosFuncionamento());
-        assertEquals(restauranteDomain.getCapacidade(), restauranteObtido.getCapacidade());
-
-        verify(restauranteRepository, times(1)).findById(id);
-    }
-
-    @Test
-    void deveGerarExcecao_QuandoValidarSeRestauranteExistePorId(){
-        var id = "1";
-
-        when(restauranteRepository.existsById(id)).thenReturn(false);
-
-        assertThatThrownBy(() -> restauranteGateway.existsById(id))
-                .isInstanceOf(NaoEncontradoException.class)
-                .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
-
-        verify(restauranteRepository, times(1)).existsById(id);
-    }
-
-    @Test
-    void deveValidarSeRestauranteExistePorId(){
-        var id = "1";
-
-        when(restauranteRepository.existsById(id)).thenReturn(true);
-
-        restauranteGateway.existsById(id);
-
-        verify(restauranteRepository, times(1)).existsById(id);
+            verify(restauranteRepository, times(1)).existsById(id);
+        }
     }
 
     private RestauranteDomain buildRestauranteDomain(){

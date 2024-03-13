@@ -1,9 +1,7 @@
 package br.com.restauranteadjt.infrastructure.persistence.collection;
 
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.AvaliacaoVO;
-import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +10,6 @@ import java.util.List;
 
 @Document(collection = "Restaurante")
 @Data
-@NoArgsConstructor
 public class RestauranteCollection {
 
     @Id
