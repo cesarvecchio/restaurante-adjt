@@ -8,6 +8,7 @@ import br.com.restauranteadjt.infrastructure.controllers.mapper.MesaDTOMapper;
 import br.com.restauranteadjt.infrastructure.presenter.MesaPresenter;
 import br.com.restauranteadjt.main.exception.ControllerExceptionHandler;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
+import br.com.restauranteadjt.main.exception.StatusReservaException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
@@ -119,8 +120,6 @@ public class MesaControllerTest {
             var horaReserva = LocalTime.of(20, 0, 0, 0);
             var statusMesa = StatusMesa.OCUPADA;
 
-            var mesaDomain = buildMesaDomain();
-
             when(mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
                     idRestaurante, dataReserva, horaReserva, statusMesa
             )).thenThrow(NaoEncontradoException.class);
@@ -155,6 +154,46 @@ public class MesaControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(statusMesa)))
                     .andExpect(status().isAccepted());
+
+            verify(mesaUseCase, times(1)).update(idRestaurante, statusMesa.getStatusMesa());
+        }
+
+        @Test
+        void deveGerarExcecao_QuandoAtualizaStatusReserva_ReservaNaoEncontrada() throws Exception {
+            var idRestaurante = ObjectId.get().toString();
+            var statusMesa = new StatusMesaRequest(StatusMesa.FINALIZADA);
+
+            when(mesaUseCase.update(idRestaurante, statusMesa.getStatusMesa()))
+                    .thenThrow(NaoEncontradoException.class);
+
+            mockMvc.perform(put("/mesas/{idRestaurante}", idRestaurante)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(statusMesa)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(result -> {
+                        String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+                        assertThat(json).contains("Nao Encontrado Exception");
+                    });
+
+            verify(mesaUseCase, times(1)).update(idRestaurante, statusMesa.getStatusMesa());
+        }
+
+        @Test
+        void deveGerarExcecao_QuandoAtualizaStatusReserva_JaPossuiStatus() throws Exception {
+            var idRestaurante = ObjectId.get().toString();
+            var statusMesa = new StatusMesaRequest(StatusMesa.FINALIZADA);
+
+            when(mesaUseCase.update(idRestaurante, statusMesa.getStatusMesa()))
+                    .thenThrow(StatusReservaException.class);
+
+            mockMvc.perform(put("/mesas/{idRestaurante}", idRestaurante)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(statusMesa)))
+                    .andExpect(status().isUnprocessableEntity())
+                    .andExpect(result -> {
+                        String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+                        assertThat(json).contains("Status Reserva!");
+                    });
 
             verify(mesaUseCase, times(1)).update(idRestaurante, statusMesa.getStatusMesa());
         }
