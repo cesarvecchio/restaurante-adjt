@@ -37,6 +37,9 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 	testImplementation("org.assertj:assertj-core:3.24.2")
+
+    testImplementation("io.cucumber:cucumber-java:7.15.0")
+    testImplementation("io.cucumber:cucumber-junit:7.15.0")
 }
 
 tasks.withType<Test> {
