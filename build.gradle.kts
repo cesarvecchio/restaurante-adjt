@@ -36,10 +36,17 @@ dependencies {
 	}
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+
+	testImplementation("org.junit.platform:junit-platform-suite-api:1.9.3")
+
 	testImplementation("org.assertj:assertj-core:3.24.2")
+
+	testImplementation("io.rest-assured:json-schema-validator:5.3.2")
 
     testImplementation("io.cucumber:cucumber-java:7.15.0")
     testImplementation("io.cucumber:cucumber-junit:7.15.0")
+	testImplementation("io.cucumber:cucumber-junit-platform-engine:7.15.0")
+//	testImplementation("io.cucumber:cucumber-platform-suite:1.9.3")
 }
 
 tasks.withType<Test> {
