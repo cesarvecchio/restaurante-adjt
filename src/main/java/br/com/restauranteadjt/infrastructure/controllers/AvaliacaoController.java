@@ -44,6 +44,6 @@ public class AvaliacaoController {
 
         List<AvaliacaoResponse> response = avaliacaoList.stream().map(avaliacaoDTOMapper::toResponse).toList();
 
-        return avaliacaoPresenter.toResponseEntity(response, HttpStatusCode.valueOf(201));
+        return avaliacaoPresenter.toResponseEntity(response, HttpStatusCode.valueOf(200));
     }
 }
