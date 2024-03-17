@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import br.com.restauranteadjt.application.usecases.AvaliacaoUseCase;
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
 import br.com.restauranteadjt.domain.enums.PontuacaoEnum;
+import br.com.restauranteadjt.infrastructure.controllers.dto.request.AvaliacaoRequest;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.AvaliacaoDTOMapper;
 import br.com.restauranteadjt.infrastructure.presenter.AvaliacaoPresenter;
 import br.com.restauranteadjt.main.exception.ControllerExceptionHandler;
@@ -65,7 +66,8 @@ public class AvaliacaoControllerTest {
     void deveCriarAvaliacao() throws Exception {
         // Arrange
         String idReserva = "1";
-        var avaliacaoDomain = buildAvaliacaoDomain();
+        AvaliacaoRequest avaliacaoRequest = buildAvaliacaoRequest();
+        AvaliacaoDomain avaliacaoDomain = avaliacaoDTOMapper.toDomain(avaliacaoRequest);
 
         when(avaliacaoUseCase.create(any(), any(AvaliacaoDomain.class)))
             .thenReturn(avaliacaoDomain);
@@ -73,7 +75,7 @@ public class AvaliacaoControllerTest {
         // Act & Assert
         mockMvc.perform(post("/avaliacoes/{idReserva}", idReserva)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(avaliacaoDomain))
+                .content(asJsonString(avaliacaoRequest))
             )
             .andExpect(status().isCreated())
             .andExpect(result -> {
@@ -86,7 +88,8 @@ public class AvaliacaoControllerTest {
     void deveListarAvaliacaoPorRestaurante() throws Exception {
         // Arrange
         String idRestaurante = "1";
-        var avaliacaoDomain = buildAvaliacaoDomain();
+        AvaliacaoRequest avaliacaoRequest = buildAvaliacaoRequest();
+        AvaliacaoDomain avaliacaoDomain = avaliacaoDTOMapper.toDomain(avaliacaoRequest);
         List<AvaliacaoDomain> avalicacoes = List.of(avaliacaoDomain);
 
         when(avaliacaoUseCase.listByIdRestaurante(any()))
@@ -105,7 +108,7 @@ public class AvaliacaoControllerTest {
         return new ObjectMapper().writeValueAsString(object);
     }
 
-    private AvaliacaoDomain buildAvaliacaoDomain() {
-        return new AvaliacaoDomain(PontuacaoEnum.PONTOS_3, "Comida muito boa");
+    private AvaliacaoRequest buildAvaliacaoRequest() {
+        return new AvaliacaoRequest(PontuacaoEnum.PONTOS_3, "Comida muito boa");
     }
 }
