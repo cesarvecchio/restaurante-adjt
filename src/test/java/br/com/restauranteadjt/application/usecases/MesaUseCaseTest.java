@@ -1,28 +1,22 @@
 package br.com.restauranteadjt.application.usecases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.restauranteadjt.application.gateways.MesaGateway;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
-import br.com.restauranteadjt.infrastructure.gateways.MesaRepositoryGateway;
-import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
-import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
-import br.com.restauranteadjt.main.exception.NaoEncontradoException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 public class MesaUseCaseTest {
     @Mock
