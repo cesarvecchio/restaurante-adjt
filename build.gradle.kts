@@ -47,6 +47,8 @@ dependencies {
     testImplementation("io.cucumber:cucumber-junit:7.15.0")
 	testImplementation("io.cucumber:cucumber-junit-platform-engine:7.15.0")
 //	testImplementation("io.cucumber:cucumber-platform-suite:1.9.3")
+
+	testImplementation("io.qameta.allure:allure-junit5:2.23.0")
 }
 
 tasks.withType<Test> {
