@@ -17,6 +17,10 @@ configurations {
 	}
 }
 
+val cucumberRuntime: Configuration by configurations.creating {
+	extendsFrom(configurations["testImplementation"])
+}
+
 repositories {
 	mavenCentral()
 }
