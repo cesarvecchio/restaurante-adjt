@@ -137,7 +137,14 @@ class RestauranteRepositoryGatewayIT {
         }
 
         @ParameterizedTest
-        @CsvSource(value={"Pizza Hut; ; ", " ;Pizzaria; ", " ; ;R. Carlos Weber, 344"}, delimiter = ';')
+        @CsvSource(value={
+                "Pizza Hut; ; ",
+                " ;Pizzaria; ",
+                " ; ;R. Carlos Weber, 344",
+                "Pizza Hut;Pizzaria; ",
+                "Pizza Hut; ;R. Carlos Weber, 344",
+                " ;Pizzaria;R. Carlos Weber, 344",
+        }, delimiter = ';')
         void devePermitirBuscarRestaurantePorNomeEOuTipoCozinhaEOuLocalizacao_InformandoSomenteNome(String nome, String tipoCozinha, String localizacao) {
             List<RestauranteDomain> restaurantesEncontrados = restauranteGateway.findByNomeOrTipoCozinhaOrLocalizacao(nome, tipoCozinha, localizacao);
             RestauranteDomain primeiroRestauranteEncontadro = restaurantesEncontrados.get(0);
