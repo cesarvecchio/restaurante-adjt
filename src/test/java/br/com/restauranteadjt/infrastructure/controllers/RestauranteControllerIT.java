@@ -3,6 +3,7 @@ package br.com.restauranteadjt.infrastructure.controllers;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -64,6 +65,7 @@ class RestauranteControllerIT {
             );
 
             given()
+                .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(restauranteRequest)
             .when()
@@ -81,6 +83,7 @@ class RestauranteControllerIT {
                     "<capacidade>10</capacidade></restaurante>";
 
             given()
+                .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(xmlPayload)
             .when()
@@ -106,6 +109,7 @@ class RestauranteControllerIT {
             );
 
             given()
+                .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(restauranteRequest)
             .when()
@@ -138,6 +142,7 @@ class RestauranteControllerIT {
         }, delimiter = ';')
         void devePermitirBuscarRestaurantePorNomeEOuTipoCozinhaEOuLocalizacao_InformandoSomenteNome(String nome, String tipoCozinha, String localizacao) {
             given()
+                .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .queryParam("nome", nome)
                 .queryParam("tipoCozinha", tipoCozinha)
@@ -145,7 +150,6 @@ class RestauranteControllerIT {
             .when()
                 .get("/restaurantes")
             .then()
-                .log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(matchesJsonSchemaInClasspath("schemas/restaurante-list.schema.json"));
         }
