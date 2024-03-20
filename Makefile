@@ -17,3 +17,9 @@ gradle-clean:
 
 docker-build: build-project
 	docker build -t backend:dev .
+
+docker-start:
+	docker compose -f docker-compose.yaml up -d
+
+docker-stop:
+	docker compose -f docker-compose.yaml down
