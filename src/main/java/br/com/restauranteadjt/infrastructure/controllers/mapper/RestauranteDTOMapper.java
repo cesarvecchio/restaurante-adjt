@@ -18,6 +18,7 @@ public class RestauranteDTOMapper {
 
     public RestauranteDomain toRestauranteDomain(CreateRestauranteRequest request){
         return new RestauranteDomain(
+                request.id(),
                 request.nome(),
                 request.localizacao(),
                 request.tipoCozinha(),

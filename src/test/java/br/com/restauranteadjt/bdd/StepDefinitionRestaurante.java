@@ -2,6 +2,7 @@ package br.com.restauranteadjt.bdd;
 
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
+import br.com.restauranteadjt.utils.Helper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
@@ -19,8 +20,8 @@ import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class StepDefinition {
-    private final Logger logger = Logger.getLogger(String.valueOf(StepDefinition.class));
+public class StepDefinitionRestaurante {
+    private final Logger logger = Logger.getLogger(String.valueOf(StepDefinitionRestaurante.class));
 
     private Response response;
     private RestauranteResponse restauranteResponse;
@@ -61,6 +62,7 @@ public class StepDefinition {
         }
     }
     @Quando("realizar a busca")
+    @SuppressWarnings("unchecked")
     public void realizar_a_busca() {
         var requisicao = criarRequisicao();
 
@@ -86,12 +88,14 @@ public class StepDefinition {
                 .body("[0].localizacao", equalTo(restauranteResponse.localizacao()));
     }
 
+
     private CreateRestauranteRequest criarRequisicao() {
         return new CreateRestauranteRequest(
+                Helper.criarIdRestaurante(),
                 "Restaurante",
                 "Localizacao",
                 "Tipo cozinha",
-                List.of(LocalTime.of(10, 0, 0, 0)),
+                List.of(Helper.criarHoraReserva()),
                 3
         );
     }

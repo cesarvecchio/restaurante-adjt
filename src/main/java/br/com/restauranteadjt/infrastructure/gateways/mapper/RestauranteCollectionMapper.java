@@ -6,6 +6,7 @@ import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteC
 public class RestauranteCollectionMapper {
     public RestauranteCollection toCollection(RestauranteDomain restauranteDomain) {
         return new RestauranteCollection(
+                restauranteDomain.getId(),
                 restauranteDomain.getNome(),
                 restauranteDomain.getLocalizacao(),
                 restauranteDomain.getTipoCozinha(),

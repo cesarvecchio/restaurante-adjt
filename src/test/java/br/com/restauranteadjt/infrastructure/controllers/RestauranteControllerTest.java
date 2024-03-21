@@ -105,6 +105,7 @@ public class RestauranteControllerTest {
 
     private CreateRestauranteRequest buildCreateRestauranteRequest() {
         return new CreateRestauranteRequest(
+                null,
             "Teste",
             "Sao Paulo",
             "Teste",

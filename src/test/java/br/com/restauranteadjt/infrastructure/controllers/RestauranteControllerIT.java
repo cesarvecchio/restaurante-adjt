@@ -57,6 +57,7 @@ class RestauranteControllerIT {
         @Test
         void devePermitirCriarRestaurante() {
             CreateRestauranteRequest restauranteRequest = new CreateRestauranteRequest(
+                    null,
                     "Hi Pokee",
                     "R. Augusta, 2068",
                     "Comida Havaiana",
@@ -101,6 +102,7 @@ class RestauranteControllerIT {
             String localizacao = "Av. Paulista";
             String tipoCozinha = "Fast Food";
             CreateRestauranteRequest restauranteRequest = new CreateRestauranteRequest(
+                    null,
                     nome,
                     localizacao,
                     tipoCozinha,
