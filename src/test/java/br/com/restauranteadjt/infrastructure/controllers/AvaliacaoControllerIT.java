@@ -7,6 +7,7 @@ import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaColle
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
+import br.com.restauranteadjt.infrastructure.persistence.valueObjects.AvaliacaoVO;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.RestauranteVO;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -50,8 +52,19 @@ public class AvaliacaoControllerIT {
     }
 
     private void popularCollectionResturante() {
+        AvaliacaoVO avaliacao1 = new AvaliacaoVO(PontuacaoEnum.PONTOS_2, "Comida razoável");
+        AvaliacaoVO avaliacao2 = new AvaliacaoVO(PontuacaoEnum.PONTOS_3, "Comida boa");
+        AvaliacaoVO avaliacao3 = new AvaliacaoVO(PontuacaoEnum.PONTOS_5, "Comida maravilhosa");
+
+        // Criando uma lista e adicionando os objetos AvaliacaoVO
+        List<AvaliacaoVO> listaAvaliacoes = new ArrayList<>();
+        listaAvaliacoes.add(avaliacao1);
+        listaAvaliacoes.add(avaliacao2);
+        listaAvaliacoes.add(avaliacao3);
+
+
         List<RestauranteCollection> restaurantes = List.of(new RestauranteCollection("65efa722ed1aa9f4356dca85", "Burger King",
-                        "Av. Paulista", "Fast Food", List.of(LocalTime.parse("22:00:00")), 4, null),
+                        "Av. Paulista", "Fast Food", List.of(LocalTime.parse("22:00:00")), 4, listaAvaliacoes),
                 new RestauranteCollection("65f30ee66ef25c44b8d9faac", "Vivenda do Camarão",
                         "Av. Raimundo Pereira de Magalhães, 1465", "Frutos do Mar", List.of(LocalTime.parse("12:00:00")), 10, null),
                 new RestauranteCollection("65f30f8bb665b3d1aa9aeee3", "Pizza Hut",
@@ -97,7 +110,6 @@ public class AvaliacaoControllerIT {
                     .when()
                     .post("/avaliacoes/{idReserva}", idReserva)
                     .then()
-                    .log().all()
                     .statusCode(HttpStatus.CREATED.value())
                     .body(matchesJsonSchemaInClasspath("schemas/avaliacao.schema.json"));
         }
@@ -165,15 +177,40 @@ public class AvaliacaoControllerIT {
 
     }
 
+    @Nested
     class ListarAvaliacoes{
        @Test
        void devePermitirBuscarAvaliacoesRestaurante(){
+            String idRestaurante = "65efa722ed1aa9f4356dca85";
 
+           given()
+                   .filter(new AllureRestAssured())
+                   .contentType(MediaType.APPLICATION_JSON_VALUE)
+                   .body(idRestaurante)
+           .when()
+                   .get("/avaliacoes/{idRestaurante}", idRestaurante)
+           .then()
+                   .statusCode(HttpStatus.CREATED.value())
+                   .body(matchesJsonSchemaInClasspath("schemas/avaliacao-list.schema.json"));
         }
 
         @Test
         void deveGerarExcecao_Quando_BuscarAvaliacoesRestaurante_NaoExisteNenhumaAvaliacao(){
-
+            String idRestaurante = "65f30ee66ef25c44b8d9faac";
+            given()
+                    .filter(new AllureRestAssured())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(idRestaurante)
+                    .when()
+                    .get("/avaliacoes/{idRestaurante}", idRestaurante)
+                    .then()
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
+                    .body("error", equalTo("Status Reserva!"))
+                    .body("message", equalTo(String.format(
+                            "O Restaurante com id:'%s' não possui nenhuma avaliação até o momento",
+                            idRestaurante)))
+                    .body("path", equalTo("/avaliacoes/65f30ee66ef25c44b8d9faac"));
         }
     }
 }
