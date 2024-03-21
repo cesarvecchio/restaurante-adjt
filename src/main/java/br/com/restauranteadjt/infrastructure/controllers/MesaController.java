@@ -7,14 +7,19 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.MesaResponse;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.StatusMesaRequest;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.MesaDTOMapper;
 import br.com.restauranteadjt.infrastructure.presenter.MesaPresenter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/mesas")
@@ -31,16 +36,16 @@ public class MesaController {
 
     @GetMapping("/{idRestaurante}/{dataReserva}/{horaReserva}")
     public ResponseEntity<?> listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-            @PathVariable String idRestaurante, @PathVariable LocalDate dataReserva, @PathVariable LocalTime horaReserva,
-            @RequestParam(required = false) StatusMesa statusMesa
-    ){
-            List<MesaDomain> mesaDomainList = mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa
-            );
+        @PathVariable String idRestaurante, @PathVariable LocalDate dataReserva, @PathVariable LocalTime horaReserva,
+        @RequestParam(required = false) StatusMesa statusMesa
+    ) {
+        List<MesaDomain> mesaDomainList = mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+            idRestaurante, dataReserva, horaReserva, statusMesa
+        );
 
-            List<MesaResponse> responseList = mesaDomainList.stream().map(mesaDTOMapper::toResponse).toList();
+        List<MesaResponse> responseList = mesaDomainList.stream().map(mesaDTOMapper::toResponse).toList();
 
-            return mesaPresenter.toResponseEntity(responseList, HttpStatus.OK);
+        return mesaPresenter.toResponseEntity(responseList, HttpStatus.OK);
     }
 
     @PutMapping("/{idReserva}")

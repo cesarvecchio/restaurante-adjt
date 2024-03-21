@@ -1,7 +1,6 @@
 package br.com.restauranteadjt.application.gateways;
 
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
-
 import java.util.List;
 
 public interface AvaliacaoGateway {

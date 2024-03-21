@@ -7,15 +7,15 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.response.AvaliacaoR
 public class AvaliacaoDTOMapper {
     public AvaliacaoDomain toDomain(AvaliacaoRequest request) {
         return new AvaliacaoDomain(
-                request.getPontuacao(),
-                request.getComentario()
+            request.getPontuacao(),
+            request.getComentario()
         );
     }
 
-    public AvaliacaoResponse toResponse(AvaliacaoDomain domain){
+    public AvaliacaoResponse toResponse(AvaliacaoDomain domain) {
         return new AvaliacaoResponse(
-                domain.pontos(),
-                domain.comentarios()
+            domain.pontos(),
+            domain.comentarios()
         );
     }
 }

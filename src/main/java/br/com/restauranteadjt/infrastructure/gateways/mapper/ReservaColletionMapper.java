@@ -6,21 +6,21 @@ import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaColle
 public class ReservaColletionMapper {
     public ReservaCollection toCollection(ReservaDomain reservaDomain) {
         return new ReservaCollection(
-                reservaDomain.dataReserva(),
-                reservaDomain.horaReserva(),
-                reservaDomain.nome(),
-                reservaDomain.email(),
-                reservaDomain.telefone()
+            reservaDomain.dataReserva(),
+            reservaDomain.horaReserva(),
+            reservaDomain.nome(),
+            reservaDomain.email(),
+            reservaDomain.telefone()
         );
     }
 
-    public ReservaDomain toDomain(ReservaCollection reservaCollection){
+    public ReservaDomain toDomain(ReservaCollection reservaCollection) {
         return new ReservaDomain(
-                reservaCollection.getDataReserva(),
-                reservaCollection.getHoraReserva(),
-                reservaCollection.getNome(),
-                reservaCollection.getEmail(),
-                reservaCollection.getTelefone()
+            reservaCollection.getDataReserva(),
+            reservaCollection.getHoraReserva(),
+            reservaCollection.getNome(),
+            reservaCollection.getEmail(),
+            reservaCollection.getTelefone()
         );
     }
 }

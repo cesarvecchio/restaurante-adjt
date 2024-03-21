@@ -1,5 +1,7 @@
 package br.com.restauranteadjt.infrastructure.gateways;
 
+import static java.util.Objects.isNull;
+
 import br.com.restauranteadjt.application.gateways.AvaliacaoGateway;
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
@@ -47,8 +49,8 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
 
         List<AvaliacaoVO> avaliacaoList = new ArrayList<>();
 
-        if (Objects.nonNull(restauranteCollection.getAvaliacoes()) &&
-            !restauranteCollection.getAvaliacoes().isEmpty()) {
+        if (Objects.nonNull(restauranteCollection.getAvaliacoes())
+            && !restauranteCollection.getAvaliacoes().isEmpty()) {
             avaliacaoList.addAll(restauranteCollection.getAvaliacoes());
         }
 
@@ -69,7 +71,7 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
         RestauranteCollection restauranteCollection = restauranteRepositoryGateway
             .findRestauranteCollection(idRestaurante);
 
-        if (restauranteCollection.getAvaliacoes() == null || restauranteCollection.getAvaliacoes().isEmpty()) {
+        if (isNull(restauranteCollection.getAvaliacoes()) || restauranteCollection.getAvaliacoes().isEmpty()) {
             throw new StatusReservaException(String.format(
                 "O Restaurante com id:'%s' não possui nenhuma avaliação até o momento",
                 idRestaurante));

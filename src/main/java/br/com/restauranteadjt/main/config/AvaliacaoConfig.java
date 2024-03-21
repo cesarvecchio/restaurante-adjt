@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class AvaliacaoConfig {
 
     @Bean
-    AvaliacaoUseCase avaliacaoUseCase(AvaliacaoGateway avaliacaoGateway){
+    AvaliacaoUseCase avaliacaoUseCase(AvaliacaoGateway avaliacaoGateway) {
         return new AvaliacaoUseCase(avaliacaoGateway);
     }
 
@@ -26,16 +26,16 @@ public class AvaliacaoConfig {
                                       ReservaRepository reservaRepository, AvaliacaoVOMapper avaliacaoVOMapper) {
 
         return new AvaliacaoRepositoryGateway(restauranteRepository, restauranteRepositoryGateway,
-                reservaRepository, avaliacaoVOMapper);
+            reservaRepository, avaliacaoVOMapper);
     }
 
     @Bean
-    AvaliacaoVOMapper avaliacaoVOMapper(){
+    AvaliacaoVOMapper avaliacaoVOMapper() {
         return new AvaliacaoVOMapper();
     }
 
     @Bean
-    AvaliacaoDTOMapper avaliacaoDTOMapper(){
+    AvaliacaoDTOMapper avaliacaoDTOMapper() {
         return new AvaliacaoDTOMapper();
     }
 

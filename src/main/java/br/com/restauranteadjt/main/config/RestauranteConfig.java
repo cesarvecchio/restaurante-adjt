@@ -26,24 +26,24 @@ public class RestauranteConfig {
     }
 
     @Bean
-    RestauranteCollectionMapper restauranteCollectionMapper(){
+    RestauranteCollectionMapper restauranteCollectionMapper() {
         return new RestauranteCollectionMapper();
     }
 
     @Bean
-    RestauranteDTOMapper restauranteDTOMapper(){
+    RestauranteDTOMapper restauranteDTOMapper() {
         return new RestauranteDTOMapper();
     }
 
     @Bean
-    RestaurantePresenter restaurantePresenter(){
+    RestaurantePresenter restaurantePresenter() {
         return new RestaurantePresenter();
     }
 
     @Bean
     RestauranteRepositoryGateway restauranteRepositoryGateway(RestauranteRepository restauranteRepository,
                                                               RestauranteCollectionMapper restauranteCollectionMapper,
-                                                              MongoTemplate mongoTemplate){
+                                                              MongoTemplate mongoTemplate) {
         return new RestauranteRepositoryGateway(restauranteRepository, restauranteCollectionMapper, mongoTemplate);
     }
 }

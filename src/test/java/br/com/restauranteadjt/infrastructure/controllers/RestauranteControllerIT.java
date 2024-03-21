@@ -1,10 +1,16 @@
 package br.com.restauranteadjt.infrastructure.controllers;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.CoreMatchers.equalTo;
+
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
+import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,13 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.time.LocalTime;
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RestauranteControllerIT {
@@ -42,11 +41,11 @@ class RestauranteControllerIT {
 
     private void popularCollectionResturante() {
         List<RestauranteCollection> restaurantes = List.of(new RestauranteCollection("65efa722ed1aa9f4356dca85", "Burger King",
-                        "Av. Paulista", "Fast Food", List.of(LocalTime.parse("22:00:00")), 4, null),
-                new RestauranteCollection("65f30ee66ef25c44b8d9faac", "Vivenda do Camarão",
-                        "Av. Raimundo Pereira de Magalhães, 1465", "Frutos do Mar", List.of(LocalTime.parse("12:00:00")), 10, null),
-                new RestauranteCollection("65f30f8bb665b3d1aa9aeee3", "Pizza Hut",
-                        "R. Carlos Weber, 344", "Pizzaria", List.of(LocalTime.parse("18:00:00")), 3, null)
+                "Av. Paulista", "Fast Food", List.of(LocalTime.parse("22:00:00")), 4, null),
+            new RestauranteCollection("65f30ee66ef25c44b8d9faac", "Vivenda do Camarão",
+                "Av. Raimundo Pereira de Magalhães, 1465", "Frutos do Mar", List.of(LocalTime.parse("12:00:00")), 10, null),
+            new RestauranteCollection("65f30f8bb665b3d1aa9aeee3", "Pizza Hut",
+                "R. Carlos Weber, 344", "Pizzaria", List.of(LocalTime.parse("18:00:00")), 3, null)
         );
         restauranteRepository.saveAll(restaurantes);
     }
@@ -57,20 +56,20 @@ class RestauranteControllerIT {
         @Test
         void devePermitirCriarRestaurante() {
             CreateRestauranteRequest restauranteRequest = new CreateRestauranteRequest(
-                    "Hi Pokee",
-                    "R. Augusta, 2068",
-                    "Comida Havaiana",
-                    List.of(LocalTime.now()),
-                    10
+                "Hi Pokee",
+                "R. Augusta, 2068",
+                "Comida Havaiana",
+                List.of(LocalTime.now()),
+                10
             );
 
             given()
                 .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(restauranteRequest)
-            .when()
+                .when()
                 .post("/restaurantes")
-            .then()
+                .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body(matchesJsonSchemaInClasspath("schemas/restaurante.schema.json"));
         }
@@ -78,17 +77,17 @@ class RestauranteControllerIT {
         @Test
         void deveGerarExcecao_QuandoCriarRestaurante_PayloadXML() {
             String xmlPayload = "<restaurante><nome>Hi Pokee</nome><localizacao>R. Augusta, 2068</localizacao>" +
-                    "<tipoCozinha>Comida Havaiana</tipoCozinha>" +
-                    "<horariosFuncionamento><element>15:16:50.6189705</element></horariosFuncionamento>" +
-                    "<capacidade>10</capacidade></restaurante>";
+                "<tipoCozinha>Comida Havaiana</tipoCozinha>" +
+                "<horariosFuncionamento><element>15:16:50.6189705</element></horariosFuncionamento>" +
+                "<capacidade>10</capacidade></restaurante>";
 
             given()
                 .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(xmlPayload)
-            .when()
+                .when()
                 .post("/restaurantes")
-            .then()
+                .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                 .body("error", equalTo("Bad Request"))
@@ -101,25 +100,25 @@ class RestauranteControllerIT {
             String localizacao = "Av. Paulista";
             String tipoCozinha = "Fast Food";
             CreateRestauranteRequest restauranteRequest = new CreateRestauranteRequest(
-                    nome,
-                    localizacao,
-                    tipoCozinha,
-                    List.of(LocalTime.parse("22:00:00")),
-                    4
+                nome,
+                localizacao,
+                tipoCozinha,
+                List.of(LocalTime.parse("22:00:00")),
+                4
             );
 
             given()
                 .filter(new AllureRestAssured())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(restauranteRequest)
-            .when()
+                .when()
                 .post("/restaurantes")
-            .then()
+                .then()
                 .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                 .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                 .body("error", equalTo("Já possui cadastro!"))
                 .body("message", equalTo(String.format(
-                        "Restaurante com nome:'%s', " +
+                    "Restaurante com nome:'%s', " +
                         "tipoCozinha:'%s' e localizacao:'%s' " +
                         "já está cadastrado no sistema", nome, tipoCozinha, localizacao))
                 )
@@ -131,14 +130,14 @@ class RestauranteControllerIT {
     class BuscarRestaurante {
 
         @ParameterizedTest
-        @CsvSource(value={
-                "Pizza Hut; ; ",
-                " ;Pizzaria; ",
-                " ; ;R. Carlos Weber, 344",
-                "Pizza Hut;Pizzaria; ",
-                "Pizza Hut; ;R. Carlos Weber, 344",
-                " ;Pizzaria;R. Carlos Weber, 344",
-                " ; ; ",
+        @CsvSource(value = {
+            "Pizza Hut; ; ",
+            " ;Pizzaria; ",
+            " ; ;R. Carlos Weber, 344",
+            "Pizza Hut;Pizzaria; ",
+            "Pizza Hut; ;R. Carlos Weber, 344",
+            " ;Pizzaria;R. Carlos Weber, 344",
+            " ; ; ",
         }, delimiter = ';')
         void devePermitirBuscarRestaurantePorNomeEOuTipoCozinhaEOuLocalizacao_InformandoSomenteNome(String nome, String tipoCozinha, String localizacao) {
             given()
@@ -147,9 +146,9 @@ class RestauranteControllerIT {
                 .queryParam("nome", nome)
                 .queryParam("tipoCozinha", tipoCozinha)
                 .queryParam("endereco", localizacao)
-            .when()
+                .when()
                 .get("/restaurantes")
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .body(matchesJsonSchemaInClasspath("schemas/restaurante-list.schema.json"));
         }

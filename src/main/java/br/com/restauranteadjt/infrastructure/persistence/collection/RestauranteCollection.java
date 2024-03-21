@@ -1,14 +1,13 @@
 package br.com.restauranteadjt.infrastructure.persistence.collection;
 
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.AvaliacaoVO;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalTime;
-import java.util.List;
 
 @Document(collection = "Restaurante")
 @Data

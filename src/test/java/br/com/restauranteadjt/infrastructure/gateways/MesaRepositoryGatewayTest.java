@@ -1,5 +1,14 @@
 package br.com.restauranteadjt.infrastructure.gateways;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.restauranteadjt.application.gateways.MesaGateway;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
@@ -9,6 +18,11 @@ import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepos
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
 import br.com.restauranteadjt.main.exception.StatusReservaException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -18,18 +32,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 public class MesaRepositoryGatewayTest {
     private final MesaVOMapper mesaVOMapper = new MesaVOMapper();
@@ -49,7 +51,7 @@ public class MesaRepositoryGatewayTest {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
         mesaGateway = new MesaRepositoryGateway(mesaVOMapper, restauranteRepositoryGateway,
-                mongoTemplate, reservaRepository);
+            mongoTemplate, reservaRepository);
     }
 
     @AfterEach
@@ -67,12 +69,12 @@ public class MesaRepositoryGatewayTest {
             var statusMesa = StatusMesa.OCUPADA;
 
             doThrow(NaoEncontradoException.class)
-                    .when(restauranteRepositoryGateway).existsById(idRestaurante);
+                .when(restauranteRepositoryGateway).existsById(idRestaurante);
 
             assertThatThrownBy(() -> mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa
+                idRestaurante, dataReserva, horaReserva, statusMesa
             ))
-                    .isInstanceOf(NaoEncontradoException.class);
+                .isInstanceOf(NaoEncontradoException.class);
 
             verify(restauranteRepositoryGateway, times(1)).existsById(any(String.class));
         }
@@ -87,15 +89,15 @@ public class MesaRepositoryGatewayTest {
             doNothing().when(restauranteRepositoryGateway).existsById(idRestaurante);
 
             when(mongoTemplate.find(query, ReservaCollection.class))
-                    .thenReturn(List.of());
+                .thenReturn(List.of());
 
             assertThatThrownBy(() -> mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, null
+                idRestaurante, dataReserva, horaReserva, null
             ))
-                    .isInstanceOf(NaoEncontradoException.class)
-                    .hasMessage(String.format(
-                            "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s'",
-                            idRestaurante, dataReserva, horaReserva));
+                .isInstanceOf(NaoEncontradoException.class)
+                .hasMessage(String.format(
+                    "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s'",
+                    idRestaurante, dataReserva, horaReserva));
 
             verify(restauranteRepositoryGateway, times(1)).existsById(any(String.class));
             verify(mongoTemplate, times(1)).find(query, ReservaCollection.class);
@@ -112,15 +114,15 @@ public class MesaRepositoryGatewayTest {
             doNothing().when(restauranteRepositoryGateway).existsById(idRestaurante);
 
             when(mongoTemplate.find(query, ReservaCollection.class))
-                    .thenReturn(List.of());
+                .thenReturn(List.of());
 
             assertThatThrownBy(() -> mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa
+                idRestaurante, dataReserva, horaReserva, statusMesa
             ))
-                    .isInstanceOf(NaoEncontradoException.class)
-                    .hasMessage(String.format(
-                            "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s' com o status:'%s'",
-                            idRestaurante, dataReserva, horaReserva, statusMesa));
+                .isInstanceOf(NaoEncontradoException.class)
+                .hasMessage(String.format(
+                    "O Restaurante com id:'%s' não possui nenhuma reserva para está data:'%s' e hora:'%s' com o status:'%s'",
+                    idRestaurante, dataReserva, horaReserva, statusMesa));
 
             verify(restauranteRepositoryGateway, times(1)).existsById(any(String.class));
             verify(mongoTemplate, times(1)).find(query, ReservaCollection.class);
@@ -139,10 +141,10 @@ public class MesaRepositoryGatewayTest {
             doNothing().when(restauranteRepositoryGateway).existsById(idRestaurante);
 
             when(mongoTemplate.find(query, ReservaCollection.class))
-                    .thenReturn(reserva);
+                .thenReturn(reserva);
 
             var mesaListaObtida = mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa);
+                idRestaurante, dataReserva, horaReserva, statusMesa);
 
             assertEquals(mesaLista, mesaListaObtida);
 
@@ -161,9 +163,9 @@ public class MesaRepositoryGatewayTest {
             when(reservaRepository.findById(idReserva)).thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> mesaGateway.update(idReserva, status))
-                    .isInstanceOf(NaoEncontradoException.class)
-                    .hasMessage(String.format("Reserva com id:'%s' não foi encontrado",
-                            idReserva));
+                .isInstanceOf(NaoEncontradoException.class)
+                .hasMessage(String.format("Reserva com id:'%s' não foi encontrado",
+                    idReserva));
 
             verify(reservaRepository, times(1)).findById(idReserva);
         }
@@ -174,17 +176,17 @@ public class MesaRepositoryGatewayTest {
             var status = StatusMesa.OCUPADA;
 
             var reserva = buildReserva(
-                    LocalDate.of(2024, 3, 20),
-                    LocalTime.of(20, 0, 0, 0),
-                    status
+                LocalDate.of(2024, 3, 20),
+                LocalTime.of(20, 0, 0, 0),
+                status
             );
 
             when(reservaRepository.findById(idReserva)).thenReturn(Optional.of(reserva));
 
             assertThatThrownBy(() -> mesaGateway.update(idReserva, status))
-                    .isInstanceOf(StatusReservaException.class)
-                    .hasMessage(String.format("Reserva com id:'%s' já possui o status:'%s'",
-                            idReserva, status));
+                .isInstanceOf(StatusReservaException.class)
+                .hasMessage(String.format("Reserva com id:'%s' já possui o status:'%s'",
+                    idReserva, status));
 
             verify(reservaRepository, times(1)).findById(idReserva);
         }
@@ -198,7 +200,7 @@ public class MesaRepositoryGatewayTest {
             reservaAtualizada.setStatusMesa(status);
 
             var mesaDomain = mesaVOMapper.toDomain(new MesaVO(reservaAtualizada.getId(), reservaAtualizada.getEmail(),
-                    reservaAtualizada.getStatusMesa()));
+                reservaAtualizada.getStatusMesa()));
 
             when(reservaRepository.findById(idReserva)).thenReturn(Optional.of(reserva));
 
@@ -215,15 +217,15 @@ public class MesaRepositoryGatewayTest {
         }
     }
 
-    private Query buildQuery(String idRestaurante, LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa){
+    private Query buildQuery(String idRestaurante, LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa) {
         Query query = new Query();
 
         Criteria criteria = Criteria
-                .where("restaurante.id").in(idRestaurante)
-                .and("dataReserva").in(dataReserva)
-                .and("horaReserva").in(horaReserva);
+            .where("restaurante.id").in(idRestaurante)
+            .and("dataReserva").in(dataReserva)
+            .and("horaReserva").in(horaReserva);
 
-        if(!Objects.isNull(statusMesa)) {
+        if (!Objects.isNull(statusMesa)) {
             criteria.and("statusMesa").in(statusMesa);
         }
 
@@ -232,13 +234,13 @@ public class MesaRepositoryGatewayTest {
         return query;
     }
 
-    private ReservaCollection buildReserva(LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa){
+    private ReservaCollection buildReserva(LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa) {
         ReservaCollection reservaCollection = new ReservaCollection(
-                dataReserva,
-                horaReserva,
-                "Teste",
-                 "teste@teste.com",
-                "22002200"
+            dataReserva,
+            horaReserva,
+            "Teste",
+            "teste@teste.com",
+            "22002200"
         );
         reservaCollection.setId("1");
         reservaCollection.setStatusMesa(statusMesa);
@@ -246,13 +248,13 @@ public class MesaRepositoryGatewayTest {
         return reservaCollection;
     }
 
-    private ReservaCollection buildReserva(){
+    private ReservaCollection buildReserva() {
         ReservaCollection reservaCollection = new ReservaCollection(
-                LocalDate.of(2024, 3, 20),
-                LocalTime.of(20, 0, 0, 0),
-                "Teste",
-                "teste@teste.com",
-                "22002200"
+            LocalDate.of(2024, 3, 20),
+            LocalTime.of(20, 0, 0, 0),
+            "Teste",
+            "teste@teste.com",
+            "22002200"
         );
         reservaCollection.setId("1");
         reservaCollection.setStatusMesa(StatusMesa.OCUPADA);
@@ -260,11 +262,11 @@ public class MesaRepositoryGatewayTest {
         return reservaCollection;
     }
 
-    private List<MesaDomain> buildMesaDomain(List<ReservaCollection> reservaCollectionList){
+    private List<MesaDomain> buildMesaDomain(List<ReservaCollection> reservaCollectionList) {
 
         return reservaCollectionList.stream().map(reservaCollection ->
-                new MesaDomain(reservaCollection.getId(), reservaCollection.getEmail(),
-                        reservaCollection.getStatusMesa())
+            new MesaDomain(reservaCollection.getId(), reservaCollection.getEmail(),
+                reservaCollection.getStatusMesa())
         ).toList();
     }
 }
