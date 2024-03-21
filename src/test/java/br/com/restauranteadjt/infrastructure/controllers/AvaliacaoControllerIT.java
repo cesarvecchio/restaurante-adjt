@@ -46,6 +46,7 @@ public class AvaliacaoControllerIT {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         popularCollectionResturante();
+        popularCollectionReserva();
     }
 
     private void popularCollectionResturante() {
@@ -88,7 +89,7 @@ public class AvaliacaoControllerIT {
         void devePermitirCriarAvaliacaoRestaurante(){
             AvaliacaoRequest avaliacaoRequest = new AvaliacaoRequest(PontuacaoEnum.PONTOS_4,
                     "Comida muito boa, porém demora bastante");
-            String idReserva = "65f45ec843af698ea2473e29";
+            String idReserva = "65f46226e747b50d9e531998";
             given()
                     .filter(new AllureRestAssured())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -96,8 +97,9 @@ public class AvaliacaoControllerIT {
                     .when()
                     .post("/avaliacoes/{idReserva}", idReserva)
                     .then()
+                    .log().all()
                     .statusCode(HttpStatus.CREATED.value())
-                    .body(matchesJsonSchemaInClasspath("schemas/"));
+                    .body(matchesJsonSchemaInClasspath("schemas/avaliacao.schema.json"));
         }
 
         @Test
@@ -115,14 +117,14 @@ public class AvaliacaoControllerIT {
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                     .body("error", equalTo("Bad Request"))
-                    .body("path", equalTo("/avaliacoes/{idReserva}"), idReserva);
+                    .body("path", equalTo("/avaliacoes/65f45ec843af698ea2473e29"));
         }
 
         @Test
         void deveGerarExcecao_Quando_CriarAvaliacaoRestaurante_IdReservaNaoExiste(){
             AvaliacaoRequest avaliacaoRequest = new AvaliacaoRequest(PontuacaoEnum.PONTOS_4,
                     "Comida muito boa, porém demora bastante");
-            String idReserva = "65f45ec843af698ea2473e29";
+            String idReserva = "3213321312321321";
 
             given()
                     .filter(new AllureRestAssured())
@@ -131,11 +133,11 @@ public class AvaliacaoControllerIT {
             .when()
                     .post("/avaliacoes/{idReserva}", idReserva)
             .then()
-                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                    .statusCode(HttpStatus.NOT_FOUND.value())
                     .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                     .body("error", equalTo("Nao Encontrado Exception"))
                     .body("message", equalTo(String.format("Reserva com id:'%s' não foi encontrada", idReserva)))
-                    .body("path", equalTo("/avaliacoes/{idReserva}"), idReserva);
+                    .body("path", equalTo("/avaliacoes/3213321312321321"));
         }
 
         @Test
@@ -157,7 +159,7 @@ public class AvaliacaoControllerIT {
                     .body("message", equalTo(String.format("A Reserva com id:'%s' possui o status:'%s', " +
                                     "só é possivel avaliar o resturante quando o status estiver como:'%s'",
                             idReserva, StatusMesa.OCUPADA, StatusMesa.FINALIZADA)))
-                    .body("path", equalTo("/avaliacoes/{idReserva}"), idReserva);
+                    .body("path", equalTo("/avaliacoes/65f45ec843af698ea2473e29"));
         }
 
 
