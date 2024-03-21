@@ -19,15 +19,13 @@ import java.util.Objects;
 
 public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
     private final RestauranteRepository restauranteRepository;
-    private final RestauranteRepositoryGateway restauranteRepositoryGateway;
     private final ReservaRepository reservaRepository;
     private final AvaliacaoVOMapper avaliacaoVOMapper;
 
     public AvaliacaoRepositoryGateway(RestauranteRepository restauranteRepository,
-                                      RestauranteRepositoryGateway restauranteRepositoryGateway,
-                                      ReservaRepository reservaRepository, AvaliacaoVOMapper avaliacaoVOMapper) {
+                                      ReservaRepository reservaRepository,
+                                      AvaliacaoVOMapper avaliacaoVOMapper) {
         this.restauranteRepository = restauranteRepository;
-        this.restauranteRepositoryGateway = restauranteRepositoryGateway;
         this.reservaRepository = reservaRepository;
         this.avaliacaoVOMapper = avaliacaoVOMapper;
     }
@@ -68,8 +66,10 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
 
     @Override
     public List<AvaliacaoDomain> listByIdRestaurante(String idRestaurante) {
-        RestauranteCollection restauranteCollection = restauranteRepositoryGateway
-            .findRestauranteCollection(idRestaurante);
+        RestauranteCollection restauranteCollection = restauranteRepository.findById(idRestaurante)
+            .orElseThrow(() ->
+                new NaoEncontradoException(
+                    String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
 
         if (isNull(restauranteCollection.getAvaliacoes()) || restauranteCollection.getAvaliacoes().isEmpty()) {
             throw new StatusReservaException(String.format(

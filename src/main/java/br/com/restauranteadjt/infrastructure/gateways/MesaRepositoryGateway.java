@@ -1,6 +1,7 @@
 package br.com.restauranteadjt.infrastructure.gateways;
 
 import br.com.restauranteadjt.application.gateways.MesaGateway;
+import br.com.restauranteadjt.application.gateways.RestauranteGateway;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.MesaVOMapper;
@@ -20,14 +21,14 @@ import org.springframework.data.mongodb.core.query.Query;
 
 public class MesaRepositoryGateway implements MesaGateway {
     private final MesaVOMapper mesaVOMapper;
-    private final RestauranteRepositoryGateway restauranteRepositoryGateway;
+    private final RestauranteGateway restauranteGateway;
     private final MongoTemplate mongoTemplate;
     private final ReservaRepository reservaRepository;
 
-    public MesaRepositoryGateway(MesaVOMapper mesaVOMapper, RestauranteRepositoryGateway restauranteRepositoryGateway,
+    public MesaRepositoryGateway(MesaVOMapper mesaVOMapper, RestauranteGateway restauranteGateway,
                                  MongoTemplate mongoTemplate, ReservaRepository reservaRepository) {
         this.mesaVOMapper = mesaVOMapper;
-        this.restauranteRepositoryGateway = restauranteRepositoryGateway;
+        this.restauranteGateway = restauranteGateway;
         this.mongoTemplate = mongoTemplate;
         this.reservaRepository = reservaRepository;
     }
@@ -35,7 +36,7 @@ public class MesaRepositoryGateway implements MesaGateway {
     @Override
     public List<MesaDomain> listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
         String idRestaurante, LocalDate dataReserva, LocalTime horaReserva, StatusMesa statusMesa) {
-        restauranteRepositoryGateway.existsById(idRestaurante);
+        restauranteGateway.existsById(idRestaurante);
 
         Criteria criteria = Criteria
             .where("restaurante.id").in(idRestaurante)

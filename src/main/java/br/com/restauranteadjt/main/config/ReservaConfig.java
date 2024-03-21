@@ -4,9 +4,9 @@ import br.com.restauranteadjt.application.gateways.ReservaGateway;
 import br.com.restauranteadjt.application.usecases.ReservaUseCase;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.ReservaDTOMapper;
 import br.com.restauranteadjt.infrastructure.gateways.ReservaRepositoryGateway;
-import br.com.restauranteadjt.infrastructure.gateways.RestauranteRepositoryGateway;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.ReservaColletionMapper;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
+import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.presenter.ReservaPresenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +19,10 @@ public class ReservaConfig {
     }
 
     @Bean
-    ReservaGateway reservaGateway(RestauranteRepositoryGateway restauranteRepositoryGateway,
+    ReservaGateway reservaGateway(RestauranteRepository restauranteRepository,
                                   ReservaRepository reservaRepository,
                                   ReservaColletionMapper reservaColletionMapper) {
-        return new ReservaRepositoryGateway(restauranteRepositoryGateway,
+        return new ReservaRepositoryGateway(restauranteRepository,
             reservaRepository, reservaColletionMapper);
     }
 

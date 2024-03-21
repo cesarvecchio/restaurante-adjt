@@ -7,9 +7,11 @@ import br.com.restauranteadjt.infrastructure.gateways.mapper.ReservaColletionMap
 import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
+import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.RestauranteVO;
 import br.com.restauranteadjt.main.exception.DataInvalidaException;
 import br.com.restauranteadjt.main.exception.JaPossuiReservaException;
+import br.com.restauranteadjt.main.exception.NaoEncontradoException;
 import br.com.restauranteadjt.main.exception.ReservaException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,14 +20,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ReservaRepositoryGateway implements ReservaGateway {
-    private final RestauranteRepositoryGateway restauranteRepositoryGateway;
+    private final RestauranteRepository restauranteRepository;
     private final ReservaRepository reservaRepository;
     private final ReservaColletionMapper reservaColletionMapper;
 
-    public ReservaRepositoryGateway(RestauranteRepositoryGateway restauranteRepositoryGateway,
+    public ReservaRepositoryGateway(RestauranteRepository restauranteRepository,
                                     ReservaRepository reservaRepository,
                                     ReservaColletionMapper reservaColletionMapper) {
-        this.restauranteRepositoryGateway = restauranteRepositoryGateway;
+        this.restauranteRepository = restauranteRepository;
         this.reservaRepository = reservaRepository;
         this.reservaColletionMapper = reservaColletionMapper;
     }
@@ -34,8 +36,10 @@ public class ReservaRepositoryGateway implements ReservaGateway {
     public ReservaDomain create(String idRestaurante, ReservaDomain reservaDomain) {
         validateDataReservaValida(LocalDateTime.of(reservaDomain.dataReserva(), reservaDomain.horaReserva()));
 
-        RestauranteCollection restauranteCollection = restauranteRepositoryGateway.findRestauranteCollection(idRestaurante);
-
+        RestauranteCollection restauranteCollection = restauranteRepository.findById(idRestaurante)
+            .orElseThrow(() ->
+                new NaoEncontradoException(
+                    String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
 
         validateDataEhHorarioReservaLivre(restauranteCollection, reservaDomain.horaReserva(), reservaDomain.dataReserva());
         validateHorarioReservaExiste(restauranteCollection, reservaDomain.horaReserva());

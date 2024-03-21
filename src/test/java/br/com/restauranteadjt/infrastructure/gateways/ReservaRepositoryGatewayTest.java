@@ -15,6 +15,7 @@ import br.com.restauranteadjt.infrastructure.gateways.mapper.ReservaColletionMap
 import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
+import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.RestauranteVO;
 import br.com.restauranteadjt.main.exception.DataInvalidaException;
 import br.com.restauranteadjt.main.exception.JaPossuiReservaException;
@@ -35,7 +36,7 @@ import org.mockito.MockitoAnnotations;
 public class ReservaRepositoryGatewayTest {
     private ReservaGateway reservaGateway;
     @Mock
-    private RestauranteRepositoryGateway restauranteRepositoryGateway;
+    private RestauranteRepository restauranteRepository;
     @Mock
     private ReservaRepository reservaRepository;
     @Mock
@@ -46,7 +47,7 @@ public class ReservaRepositoryGatewayTest {
     @BeforeEach
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        reservaGateway = new ReservaRepositoryGateway(restauranteRepositoryGateway, reservaRepository,
+        reservaGateway = new ReservaRepositoryGateway(restauranteRepository, reservaRepository,
             reservaColletionMapper);
     }
 
@@ -66,7 +67,7 @@ public class ReservaRepositoryGatewayTest {
                 .isInstanceOf(DataInvalidaException.class)
                 .hasMessage("A data e hora de reserva não pode ser anterior a data e hora atual");
 
-            verify(restauranteRepositoryGateway, never()).findRestauranteCollection(any(String.class));
+            verify(restauranteRepository, never()).findById(any(String.class));
         }
 
         @Test
@@ -74,15 +75,13 @@ public class ReservaRepositoryGatewayTest {
             var id = ObjectId.get().toString();
             var reserva = criarReservaDomainDataFutura();
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(id))
-                .thenThrow(new NaoEncontradoException(
-                    String.format("Restaurante com id:'%s' não foi encontrado!", id)));
+            when(restauranteRepository.findById(id)).thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> reservaGateway.create(id, reserva))
                 .isInstanceOf(NaoEncontradoException.class)
                 .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
 
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(any(String.class));
+            verify(restauranteRepository, times(1)).findById(any(String.class));
         }
 
         @Test
@@ -93,8 +92,8 @@ public class ReservaRepositoryGatewayTest {
             var restaurante = criarRestaurante();
             restaurante.setId(id);
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(id))
-                .thenReturn(restaurante);
+            when(restauranteRepository.findById(id))
+                .thenReturn(Optional.of(restaurante));
 
 
             assertThatThrownBy(() -> reservaGateway.create(id, reserva))
@@ -102,7 +101,7 @@ public class ReservaRepositoryGatewayTest {
                 .hasMessage(String.format("Restaurante com id:'%s' não possuio o horario:'%s' para reserva",
                     restaurante.getId(), reserva.horaReserva()));
 
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(any(String.class));
+            verify(restauranteRepository, times(1)).findById(any(String.class));
         }
 
         @Test
@@ -113,8 +112,8 @@ public class ReservaRepositoryGatewayTest {
             var restaurante = criarRestaurante();
             restaurante.setId(id);
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(id))
-                .thenReturn(restaurante);
+            when(restauranteRepository.findById(id))
+                .thenReturn(Optional.of(restaurante));
 
             when(reservaRepository.countByIdRestauranteAndHorarioReservaAndDataReserva(restaurante.getId(),
                 reserva.horaReserva(), reserva.dataReserva()))
@@ -126,7 +125,7 @@ public class ReservaRepositoryGatewayTest {
                     "O Restaurante com id:'%s' não possui reserva livre para a data:'%s' e hora:'%s'",
                     restaurante.getId(), reserva.dataReserva(), reserva.horaReserva()));
 
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(any(String.class));
+            verify(restauranteRepository, times(1)).findById(any(String.class));
             verify(reservaRepository, times(1))
                 .countByIdRestauranteAndHorarioReservaAndDataReserva(any(String.class), any(LocalTime.class),
                     any(LocalDate.class));
@@ -142,8 +141,8 @@ public class ReservaRepositoryGatewayTest {
 
             var reservaCollection = criarReservaCollectio();
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(id))
-                .thenReturn(restaurante);
+            when(restauranteRepository.findById(id))
+                .thenReturn(Optional.of(restaurante));
             when(reservaRepository.countByIdRestauranteAndHorarioReservaAndDataReserva(restaurante.getId(),
                 reserva.horaReserva(), reserva.dataReserva()))
                 .thenReturn(restaurante.getCapacidade() - 1);
@@ -158,7 +157,7 @@ public class ReservaRepositoryGatewayTest {
                 .hasMessage(String.format("Você já possui uma reserva agendada no restaurante com id:'%s' para a data:'%s' e hora:'%s'",
                     restaurante.getId(), reservaCollection.getDataReserva(), reservaCollection.getHoraReserva()));
 
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(any(String.class));
+            verify(restauranteRepository, times(1)).findById(any(String.class));
             verify(reservaRepository, times(1))
                 .countByIdRestauranteAndHorarioReservaAndDataReserva(any(String.class), any(LocalTime.class),
                     any(LocalDate.class));
@@ -184,8 +183,8 @@ public class ReservaRepositoryGatewayTest {
 
             var reservaDomain = reservaColletionMapper.toDomain(reservaCollection);
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(id))
-                .thenReturn(restaurante);
+            when(restauranteRepository.findById(id))
+                .thenReturn(Optional.of(restaurante));
             when(reservaRepository.countByIdRestauranteAndHorarioReservaAndDataReserva(restaurante.getId(),
                 reserva.horaReserva(), reserva.dataReserva()))
                 .thenReturn(restaurante.getCapacidade() - 1);
@@ -200,7 +199,7 @@ public class ReservaRepositoryGatewayTest {
 
             assertEquals(reservaDomain, reservaDomainObtida);
 
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(any(String.class));
+            verify(restauranteRepository, times(1)).findById(any(String.class));
             verify(reservaRepository, times(1))
                 .countByIdRestauranteAndHorarioReservaAndDataReserva(any(String.class), any(LocalTime.class),
                     any(LocalDate.class));
