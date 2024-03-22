@@ -2,23 +2,28 @@ package br.com.restauranteadjt.bdd;
 
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateReservaRequest;
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.ReservaResponse;
+import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 import br.com.restauranteadjt.utils.Helper;
+import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import static io.restassured.RestAssured.given;
 
 public class StepDefinitionReserva {
     private Response response;
+    protected RestauranteResponse restauranteResponse;
+
+    @Dado("que um restaurante existe e possui vaga")
+    public void que_um_restaurante_existe_e_possui_vaga() {
+        restauranteResponse = new StepDefinitionRestaurante().criar_um_novo_restaurante();
+    }
 
     @Quando("criar uma nova reserva")
-    public void criar_uma_nova_reserva() {
+    public ReservaResponse criar_uma_nova_reserva() {
         var reservaRequest = criarRequisicao();
 
         String ENDPOINT_API_RESERVA = "http://localhost:8080/reservas";
@@ -26,7 +31,9 @@ public class StepDefinitionReserva {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservaRequest)
                 .when()
-                .post(ENDPOINT_API_RESERVA + "/{idRestaurante}", Helper.criarIdRestaurante());
+                .post(ENDPOINT_API_RESERVA + "/{idRestaurante}", restauranteResponse.id());
+
+        return response.then().extract().as(ReservaResponse.class);
     }
     @Então("a reserva deve ser criada com sucesso")
     public void a_reserva_deve_ser_criada_com_sucesso() {
@@ -45,7 +52,7 @@ public class StepDefinitionReserva {
                 Helper.criarDataReserva(),
                 Helper.criarHoraReserva(),
                 "Albert",
-                "albert@gmail.com",
+                Helper.criarTexto() + "_albert@gmail.com",
                 "40028922"
         );
     }

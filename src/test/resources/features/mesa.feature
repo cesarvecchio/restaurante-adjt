@@ -7,6 +7,6 @@ Funcionalidade: Mesa
     Então a mesa deve ser apresentado com sucesso
 
   Cenario: Atualizar Status da Mesa
-    Dado que uma reserva foi efetuada e finalizada
+    Dado que uma reserva foi efetuada e atendida
     Então deve atualizar status da mesa
     E retornar a mesa com status atualizado com sucesso
