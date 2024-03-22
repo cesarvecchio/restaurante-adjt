@@ -1,2 +1,4 @@
-package br.com.restauranteadjt.bdd;public class StepDefinitionAvaliacao {
+package br.com.restauranteadjt.bdd;
+
+public class StepDefinitionAvaliacao {
 }
