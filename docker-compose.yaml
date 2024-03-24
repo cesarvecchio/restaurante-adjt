@@ -2,8 +2,6 @@ version: '3'
 
 networks:
   restaurante-network:
-volumes:
-  restaurante-volume:
 
 services:
   mongodb-restaurante:
@@ -13,8 +11,6 @@ services:
       - "27017:27017"
     networks:
       - restaurante-network
-    volumes:
-      - restaurante-volume:/db
 
   app:
     image: 'backend:dev'
@@ -26,8 +22,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      MONGO_URI: mongodb://mongodb-restaurante:27017/restaurante-teste?authSource=admin
+      MONGO_URI: mongodb://mongodb-restaurante:27017/restaurante?authSource=admin
     networks:
       - restaurante-network
-    volumes:
-      - restaurante-volume:/backend

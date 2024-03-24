@@ -1,0 +1,7 @@
+{
+  "nome": "#{nome}",
+  "localizacao": "Paulista",
+  "tipoCozinha": "Fast Food",
+  "horariosFuncionamento": ["22:00:00"],
+  "capacidade": 4
+}

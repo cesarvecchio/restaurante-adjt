@@ -71,7 +71,7 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
             .toList();
     }
 
-    protected RestauranteCollection findRestauranteCollection(String idRestaurante) {
+    private RestauranteCollection findRestauranteCollection(String idRestaurante) {
         return restauranteRepository.findById(idRestaurante)
             .orElseThrow(() ->
                 new NaoEncontradoException(
