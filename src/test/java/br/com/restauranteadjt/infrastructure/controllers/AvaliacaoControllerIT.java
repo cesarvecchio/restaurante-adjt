@@ -129,7 +129,7 @@ public class AvaliacaoControllerIT {
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                     .body("error", equalTo("Bad Request"))
-                    .body("path", equalTo("/avaliacoes/65f45ec843af698ea2473e29"));
+                    .body("path", equalTo("/avaliacoes/" + idReserva));
         }
 
         @Test
@@ -149,7 +149,7 @@ public class AvaliacaoControllerIT {
                     .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                     .body("error", equalTo("Nao Encontrado Exception"))
                     .body("message", equalTo(String.format("Reserva com id:'%s' não foi encontrada", idReserva)))
-                    .body("path", equalTo("/avaliacoes/3213321312321321"));
+                    .body("path", equalTo("/avaliacoes/" + idReserva));
         }
 
         @Test
@@ -171,7 +171,7 @@ public class AvaliacaoControllerIT {
                     .body("message", equalTo(String.format("A Reserva com id:'%s' possui o status:'%s', " +
                                     "só é possivel avaliar o resturante quando o status estiver como:'%s'",
                             idReserva, StatusMesa.OCUPADA, StatusMesa.FINALIZADA)))
-                    .body("path", equalTo("/avaliacoes/65f45ec843af698ea2473e29"));
+                    .body("path", equalTo("/avaliacoes/" + idReserva));
         }
 
 
@@ -211,7 +211,7 @@ public class AvaliacaoControllerIT {
                     .body("message", equalTo(String.format(
                             "O Restaurante com id:'%s' não possui nenhuma avaliação até o momento",
                             idRestaurante)))
-                    .body("path", equalTo("/avaliacoes/65f30ee66ef25c44b8d9faac"));
+                    .body("path", equalTo("/avaliacoes/" + idRestaurante));
         }
     }
 }
