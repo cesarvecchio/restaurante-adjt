@@ -190,6 +190,7 @@ public class AvaliacaoControllerIT {
            .when()
                    .get("/avaliacoes/{idRestaurante}", idRestaurante)
            .then()
+                   .log().all()
                    .statusCode(HttpStatus.CREATED.value())
                    .body(matchesJsonSchemaInClasspath("schemas/avaliacao-list.schema.json"));
         }
