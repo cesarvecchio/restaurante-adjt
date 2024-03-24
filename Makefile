@@ -1,4 +1,4 @@
-build-project:gradle-clean
+build-project:
 	gradle build --refresh-dependencies -x test
 
 unit-test: gradle-clean
@@ -7,22 +7,22 @@ unit-test: gradle-clean
 integration-test: gradle-clean
 	gradle integrationTest
 
+system-test:
+	gradle cucumberCli
+
+performance-test: gradle-clean
+	gradle gatlingRun
+
 test: unit-test integration-test
 
 gradle-clean:
 	gradle clean
 
-docker-build: build-project
+docker-build:
 	docker build -t backend:dev .
 
-docker-start: docker-build
+docker-start:
 	docker compose -f docker-compose.yaml up -d
 
-system-test: docker-start
-	gradle cucumberCli
-
-docker-drop-database: system-test
-	docker exec -it mongodb-restaurante bash -c "mongosh --eval 'use restaurante-teste' --eval  'db.dropDatabase()'"
-
-docker-stop: docker-drop-database
-	docker compose -f docker-compose.yaml stop
+docker-stop:
+	docker compose -f docker-compose.yaml down

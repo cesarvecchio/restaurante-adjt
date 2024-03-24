@@ -7,22 +7,23 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.response.Restaurant
 public class RestauranteDTOMapper {
     public RestauranteResponse toResponse(RestauranteDomain domainObj) {
         return new RestauranteResponse(
-            domainObj.getId(),
-            domainObj.getNome(),
-            domainObj.getLocalizacao(),
-            domainObj.getTipoCozinha(),
-            domainObj.getHorariosFuncionamento(),
-            domainObj.getCapacidade()
+                domainObj.getId(),
+                domainObj.getNome(),
+                domainObj.getLocalizacao(),
+                domainObj.getTipoCozinha(),
+                domainObj.getHorariosFuncionamento(),
+                domainObj.getCapacidade()
         );
     }
 
     public RestauranteDomain toRestauranteDomain(CreateRestauranteRequest request) {
         return new RestauranteDomain(
-            request.nome(),
-            request.localizacao(),
-            request.tipoCozinha(),
-            request.horariosFuncionamento(),
-            request.capacidade()
+                request.id(),
+                request.nome(),
+                request.localizacao(),
+                request.tipoCozinha(),
+                request.horariosFuncionamento(),
+                request.capacidade()
         );
     }
 }

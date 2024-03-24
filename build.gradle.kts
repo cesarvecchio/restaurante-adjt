@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.2.2"
 	id("io.spring.dependency-management") version "1.1.4"
+	id("io.gatling.gradle") version "3.10.4"
 }
 
 group = "br.com"
@@ -28,6 +29,9 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	implementation("io.gatling:gatling-app:3.9.5")
+	implementation("io.gatling.highcharts:gatling-charts-highcharts:3.9.5")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
