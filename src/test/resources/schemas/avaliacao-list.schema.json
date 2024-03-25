@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "array",
+  "default": [],
+  "title": "Root Schema",
+  "items": {
+    "type": "object",
+    "title": "A Schema",
+    "required": [
+      "pontuacao",
+      "comentario"
+    ],
+    "properties": {
+      "pontuacao": {
+        "type": "string",
+        "title": "The pontuacao Schema",
+        "examples": [
+          "PONTOS_2",
+          "PONTOS_3",
+          "PONTOS_5"
+        ]
+      },
+      "comentario": {
+        "type": "string",
+        "title": "The comentario Schema",
+        "examples": [
+          "Comida razoável",
+          "Comida boa",
+          "Comida maravilhosa"
+        ]
+      }
+    },
+    "examples": [{
+      "pontuacao": "PONTOS_2",
+      "comentario": "Comida razoável"
+    },
+      {
+        "pontuacao": "PONTOS_3",
+        "comentario": "Comida boa"
+      },
+      {
+        "pontuacao": "PONTOS_5",
+        "comentario": "Comida maravilhosa"
+      }]
+  },
+  "examples": [
+    [{
+      "pontuacao": "PONTOS_2",
+      "comentario": "Comida razoável"
+    },
+      {
+        "pontuacao": "PONTOS_3",
+        "comentario": "Comida boa"
+      },
+      {
+        "pontuacao": "PONTOS_5",
+        "comentario": "Comida maravilhosa"
+      }]
+  ]
+}
