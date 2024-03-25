@@ -7,21 +7,23 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.response.ReservaRes
 public class ReservaDTOMapper {
     public ReservaResponse toResponse(ReservaDomain domain) {
         return new ReservaResponse(
-            domain.dataReserva(),
-            domain.horaReserva(),
-            domain.nome(),
-            domain.email(),
-            domain.telefone()
+                domain.id(),
+                domain.dataReserva(),
+                domain.horaReserva(),
+                domain.nome(),
+                domain.email(),
+                domain.telefone()
         );
     }
 
     public ReservaDomain toDomain(CreateReservaRequest request) {
         return new ReservaDomain(
-            request.dataReserva(),
-            request.horaReserva(),
-            request.nome(),
-            request.email(),
-            request.telefone()
+                null,
+                request.dataReserva(),
+                request.horaReserva(),
+                request.nome(),
+                request.email(),
+                request.telefone()
         );
     }
 }

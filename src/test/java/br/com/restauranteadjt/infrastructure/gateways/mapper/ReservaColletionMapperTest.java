@@ -14,11 +14,12 @@ class ReservaColletionMapperTest {
     @Test
     void deveConverterDomainParaCollection() {
         var domain = new ReservaDomain(
-            LocalDate.now(),
-            LocalTime.now(),
-            "Teste",
-            "teste@teste.com",
-            "40028922"
+                null,
+                LocalDate.now(),
+                LocalTime.now(),
+                "Teste",
+                "teste@teste.com",
+                "40028922"
         );
 
         var collection = reservaColletionMapper.toCollection(domain);
@@ -42,6 +43,7 @@ class ReservaColletionMapperTest {
 
         var domain = reservaColletionMapper.toDomain(collection);
 
+        assertEquals(collection.getId(), domain.id());
         assertEquals(collection.getDataReserva(), domain.dataReserva());
         assertEquals(collection.getHoraReserva(), domain.horaReserva());
         assertEquals(collection.getNome(), domain.nome());

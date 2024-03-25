@@ -214,31 +214,34 @@ public class ReservaRepositoryGatewayTest {
 
     private ReservaDomain criarReservaDomainDataFutura() {
         return new ReservaDomain(
-            LocalDate.now().plusDays(1L),
-            LocalTime.of(20, 0, 0, 0),
-            "Sérgio",
-            "sergio@gmail.com",
-            "40028922"
+                null,
+                LocalDate.now().plusDays(1L),
+                LocalTime.of(20, 0, 0, 0),
+                "Sérgio",
+                "sergio@gmail.com",
+                "40028922"
         );
     }
 
     private ReservaDomain criarReservaDomainDataPassada() {
         return new ReservaDomain(
-            LocalDate.now().minusDays(1),
-            LocalTime.of(20, 0, 0, 0),
-            "Sérgio",
-            "sergio@gmail.com",
-            "40028922"
+                null,
+                LocalDate.now().minusDays(1),
+                LocalTime.of(20, 0, 0, 0),
+                "Sérgio",
+                "sergio@gmail.com",
+                "40028922"
         );
     }
 
     private ReservaDomain criarReservaDomainDataFuturaHorarioInexistente() {
         return new ReservaDomain(
-            LocalDate.now().plusDays(1L),
-            LocalTime.of(21, 0, 0, 0),
-            "Sérgio",
-            "sergio@gmail.com",
-            "40028922"
+                null,
+                LocalDate.now().plusDays(1L),
+                LocalTime.of(21, 0, 0, 0),
+                "Sérgio",
+                "sergio@gmail.com",
+                "40028922"
         );
     }
 

@@ -94,8 +94,8 @@ public class ReservaRepositoryGatewayIT {
             String idRestaurante = "65f30f8bb665b3d1aa9aeee3";
             LocalDate data = LocalDate.of(2024, 6, 15);
             LocalTime horario = LocalTime.parse("18:00:00");
-            ReservaDomain reservaDomain = new ReservaDomain(data, horario, "Guilherme Matos de Carvalho",
-                "guilherme@gmail.com", "11981281123");
+            ReservaDomain reservaDomain = new ReservaDomain(null, data, horario, "Guilherme Matos de Carvalho",
+                    "guilherme@gmail.com", "11981281123");
 
             reservaGateway.create(idRestaurante, reservaDomain);
 
@@ -149,8 +149,9 @@ public class ReservaRepositoryGatewayIT {
             String idRestaurante = "65efa722ed1aa9f4356dca85";
             LocalDate data = LocalDate.of(2019, 6, 15);
             LocalTime horario = LocalTime.parse("22:00:00");
-            ReservaDomain reservaDomain = new ReservaDomain(data, horario, "Guilherme Matos de Carvalho",
-                "guilherme@gmail.com", "11981281123");
+
+            ReservaDomain reservaDomain = new ReservaDomain(null, data, horario, "Guilherme Matos de Carvalho",
+                    "guilherme@gmail.com", "11981281123");
 
             assertThatThrownBy(() -> reservaGateway.create(idRestaurante, reservaDomain))
                 .isInstanceOf(DataInvalidaException.class)
@@ -162,8 +163,9 @@ public class ReservaRepositoryGatewayIT {
             String idRestaurante = "65f532a4c76eed86ae85ee3f";
             LocalDate data = LocalDate.now().plusDays(2);
             LocalTime horario = LocalTime.parse("20:00:00");
-            ReservaDomain reservaDomain = new ReservaDomain(data, horario, "Guilherme Matos de Carvalho",
-                "guilherme@gmail.com", "11981281123");
+
+            ReservaDomain reservaDomain = new ReservaDomain(null, data, horario, "Guilherme Matos de Carvalho",
+                    "guilherme@gmail.com", "11981281123");
 
             assertThatThrownBy(() -> reservaGateway.create(idRestaurante, reservaDomain))
                 .isInstanceOf(ReservaException.class)
@@ -176,8 +178,9 @@ public class ReservaRepositoryGatewayIT {
             String idRestaurante = "65f532a4c76eed86ae85ee3f";
             LocalDate data = LocalDate.now().plusDays(7);
             LocalTime horario = LocalTime.parse("20:00:00");
-            ReservaDomain reservaDomain = new ReservaDomain(data, horario, "Guilherme Matos de Carvalho",
-                "guilherme@gmail.com", "11981281123");
+
+            ReservaDomain reservaDomain = new ReservaDomain(null, data, horario, "Guilherme Matos de Carvalho",
+                    "guilherme@gmail.com", "11981281123");
 
             assertThatThrownBy(() -> reservaGateway.create(idRestaurante, reservaDomain))
                 .isInstanceOf(ReservaException.class)
@@ -191,8 +194,9 @@ public class ReservaRepositoryGatewayIT {
             String idRestaurante = "65efa722ed1aa9f4356dca85";
             LocalDate data = LocalDate.now().plusDays(2);
             LocalTime horario = LocalTime.parse("22:00:00");
-            ReservaDomain reservaDomain = new ReservaDomain(data, horario, "João",
-                "joao09@gmail.com", "11912345678");
+
+            ReservaDomain reservaDomain = new ReservaDomain(null, data, horario, "João",
+                    "joao09@gmail.com", "11912345678");
 
             assertThatThrownBy(() -> reservaGateway.create(idRestaurante, reservaDomain))
                 .isInstanceOf(JaPossuiReservaException.class)

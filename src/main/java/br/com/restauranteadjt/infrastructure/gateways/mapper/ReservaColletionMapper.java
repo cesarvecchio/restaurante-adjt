@@ -16,11 +16,12 @@ public class ReservaColletionMapper {
 
     public ReservaDomain toDomain(ReservaCollection reservaCollection) {
         return new ReservaDomain(
-            reservaCollection.getDataReserva(),
-            reservaCollection.getHoraReserva(),
-            reservaCollection.getNome(),
-            reservaCollection.getEmail(),
-            reservaCollection.getTelefone()
+                reservaCollection.getId(),
+                reservaCollection.getDataReserva(),
+                reservaCollection.getHoraReserva(),
+                reservaCollection.getNome(),
+                reservaCollection.getEmail(),
+                reservaCollection.getTelefone()
         );
     }
 }
