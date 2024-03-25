@@ -16,6 +16,7 @@ public class ReservaColletionMapper {
 
     public ReservaDomain toDomain(ReservaCollection reservaCollection){
         return new ReservaDomain(
+                reservaCollection.getId(),
                 reservaCollection.getDataReserva(),
                 reservaCollection.getHoraReserva(),
                 reservaCollection.getNome(),

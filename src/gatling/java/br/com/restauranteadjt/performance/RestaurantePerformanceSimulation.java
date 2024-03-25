@@ -2,7 +2,6 @@ package br.com.restauranteadjt.performance;
 
 import io.gatling.javaapi.core.ActionBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
-import io.gatling.javaapi.core.Session;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 
@@ -23,7 +22,7 @@ public class RestaurantePerformanceSimulation extends Simulation {
 
     ActionBuilder adicionarRestauranteRequest = http("request: adicionar restaurante")
             .post("/restaurantes")
-            .body(ElFileBody("bodies/request.json"))
+            .body(ElFileBody("bodies/requestRestaurante.json"))
             .check(status().is(201))
             .check(jsonPath("$.id").saveAs("idRestaurante"))
             .check(jsonPath("$.nome").saveAs("nomeRestaurante"))

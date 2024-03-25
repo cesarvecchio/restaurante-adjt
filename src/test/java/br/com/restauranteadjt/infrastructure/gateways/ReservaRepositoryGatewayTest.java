@@ -212,6 +212,7 @@ public class ReservaRepositoryGatewayTest {
 
     private ReservaDomain criarReservaDomainDataFutura(){
         return new ReservaDomain(
+                null,
                 LocalDate.now().plusDays(1L),
                 LocalTime.of(20, 0, 0, 0),
                 "Sérgio",
@@ -222,6 +223,7 @@ public class ReservaRepositoryGatewayTest {
 
     private ReservaDomain criarReservaDomainDataPassada(){
         return new ReservaDomain(
+                null,
                 LocalDate.now().minusDays(1),
                 LocalTime.of(20, 0, 0, 0),
                 "Sérgio",
@@ -232,6 +234,7 @@ public class ReservaRepositoryGatewayTest {
 
     private ReservaDomain criarReservaDomainDataFuturaHorarioInexistente(){
         return new ReservaDomain(
+                null,
                 LocalDate.now().plusDays(1L),
                 LocalTime.of(21, 0, 0, 0),
                 "Sérgio",

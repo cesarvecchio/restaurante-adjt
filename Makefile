@@ -19,7 +19,8 @@ gradle-clean:
 	gradle clean
 
 docker-build:
-	docker build -t backend:dev .
+	docker image prune --force --filter 'label=backend-dev'
+	docker build -t backend:dev --label backend-dev .
 
 docker-start:
 	docker compose -f docker-compose.yaml up -d

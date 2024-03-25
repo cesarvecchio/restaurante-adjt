@@ -38,6 +38,7 @@ public class ReservaUseCaseTest {
     void deveCriarReserva(){
         var idReserva = "65f252a447277444c60898ae";
         var reservaDomain =  new ReservaDomain(
+                null,
                 LocalDate.now().plusDays(1L),
                 LocalTime.of(20, 0, 0, 0),
                 "Sérgio",
