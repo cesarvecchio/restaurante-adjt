@@ -17,24 +17,18 @@ import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 
 public class ReservaPerformanceSimulation extends Simulation {
-    @Override
-    public void before() {
-
-        super.before();
-    }
 
     private final HttpProtocolBuilder httpProtocol = http.baseUrl("http://localhost:8080")
             .header("Content-Type", "application/json");
 
     ActionBuilder adicionarReservaRequest = http("adicionar reserva")
-            .post("/reservas/65ff1cfc171f15442bed5562")
+            .post("/reservas/660163012caaff5160053f8a")
             .body(ElFileBody("bodies/requestReserva.json"))
             .check(status().is(201));
 
     ScenarioBuilder cenarioAdicionarReserva = scenario("Adicionar Reserva")
             .exec(session ->
                 session.set("dataReserva", LocalDate.now()
-                        .plusDays(ThreadLocalRandom.current().nextInt(1, 10000 + 1))
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 )
             .exec(session ->
