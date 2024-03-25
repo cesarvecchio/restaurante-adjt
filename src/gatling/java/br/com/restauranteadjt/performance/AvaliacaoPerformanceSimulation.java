@@ -57,7 +57,6 @@ public class AvaliacaoPerformanceSimulation extends Simulation {
             .exec(adicionarRestauranteRequest)
             .exec(session ->
                     session.set("dataReserva", LocalDate.now()
-                            .plusDays(ThreadLocalRandom.current().nextInt(1, 10000 + 1))
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
             )
             .exec(session ->

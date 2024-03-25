@@ -9,25 +9,18 @@ import io.gatling.javaapi.http.HttpProtocolBuilder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 
-public class ReservaPerformanceSimulation extends Simulation {
+public class MesaPerformanceSimulation extends Simulation {
     Random random = new Random();
 
-    @Override
-    public void before() {
-
-        super.before();
-    }
-
-    private final HttpProtocolBuilder httpProtocol = http.baseUrl("http://localhost:8080")
-            .header("Content-Type", "application/json");
+    private final HttpProtocolBuilder httpProtocol =
+            http.baseUrl("http://localhost:8080")
+                    .header("Content-Type", "application/json");
 
     ActionBuilder adicionarRestauranteRequest = http("request: adicionar restaurante")
             .post("/restaurantes")
@@ -35,26 +28,42 @@ public class ReservaPerformanceSimulation extends Simulation {
             .check(status().is(201))
             .check(jsonPath("$.id").saveAs("idRestaurante"));
 
-    ActionBuilder adicionarReservaRequest = http("adicionar reserva")
+    ActionBuilder adicionarReservaRequest = http("request: adicionar reserva")
             .post("/reservas/#{idRestaurante}")
             .body(ElFileBody("bodies/requestReserva.json"))
-            .check(status().in(List.of(201)));
+            .check(status().is(201))
+            .check(jsonPath("$.id").saveAs("idReserva"))
+            .check(jsonPath("$.dataReserva").saveAs("dataReserva"))
+            .check(jsonPath("$.horaReserva").saveAs("horaReserva"));
 
-    ScenarioBuilder cenarioAdicionarReserva = scenario("Adicionar Reserva")
+    ActionBuilder listarMesas = http("request: listar mesas")
+            .get("/#{idRestaurante}" +
+                    "/#{dataReserva}" +
+                    "/#{horaReserva}" +
+                    "?statusMesa=OCUPADA")
+            .check(status().is(201));
+
+//    ActionBuilder atualizarStatusMesaRequest = http("request: atualizar status mesa")
+//            .put("/mesas/#{idReserva}")
+//            .body(StringBody("{\"statusMesa\": \"FINALIZADA\"}"))
+//            .check(status().is(202));
+
+    ScenarioBuilder cenarioListarMesas = scenario("Listar Mesas")
             .exec(session -> session.set("nome", "Restaurante" + getRandomNumber()))
             .exec(adicionarRestauranteRequest)
             .exec(session ->
                     session.set("dataReserva", LocalDate.now()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                )
+            )
             .exec(session ->
                     session.set("email", Helper.criarTexto() + "albert@gmail.com")
             )
-            .exec(adicionarReservaRequest);
+            .exec(adicionarReservaRequest)
+            .exec(listarMesas);
 
     {
         setUp(
-                cenarioAdicionarReserva.injectOpen(
+                cenarioListarMesas.injectOpen(
                         rampUsersPerSec(1)
                                 .to(10)
                                 .during(Duration.ofSeconds(10)),
@@ -64,6 +73,7 @@ public class ReservaPerformanceSimulation extends Simulation {
                                 .to(1)
                                 .during(Duration.ofSeconds(10))
                 )
+
         )
                 .protocols(httpProtocol)
                 .assertions(
@@ -71,6 +81,7 @@ public class ReservaPerformanceSimulation extends Simulation {
                         global().failedRequests().count().is(0L)
                 );
     }
+
 
     private Integer getRandomNumber() {
         return random.nextInt();
