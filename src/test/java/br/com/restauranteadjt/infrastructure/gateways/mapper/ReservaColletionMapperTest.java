@@ -1,19 +1,18 @@
 package br.com.restauranteadjt.infrastructure.gateways.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import br.com.restauranteadjt.domain.entity.ReservaDomain;
 import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class ReservaColletionMapperTest {
     private final ReservaColletionMapper reservaColletionMapper = new ReservaColletionMapper();
 
     @Test
-    void deveConverterDomainParaCollection(){
+    void deveConverterDomainParaCollection() {
         var domain = new ReservaDomain(
                 null,
                 LocalDate.now(),
@@ -33,13 +32,13 @@ class ReservaColletionMapperTest {
     }
 
     @Test
-    void deveConverterCollectionParaDomain(){
+    void deveConverterCollectionParaDomain() {
         var collection = new ReservaCollection(
-                LocalDate.now(),
-                LocalTime.now(),
-                "Teste",
-                "teste@teste.com",
-                "40028922"
+            LocalDate.now(),
+            LocalTime.now(),
+            "Teste",
+            "teste@teste.com",
+            "40028922"
         );
 
         var domain = reservaColletionMapper.toDomain(collection);

@@ -1,5 +1,7 @@
 package br.com.restauranteadjt.infrastructure.gateways;
 
+import static java.util.Objects.isNull;
+
 import br.com.restauranteadjt.application.gateways.AvaliacaoGateway;
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
@@ -17,15 +19,13 @@ import java.util.Objects;
 
 public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
     private final RestauranteRepository restauranteRepository;
-    private final RestauranteRepositoryGateway restauranteRepositoryGateway;
     private final ReservaRepository reservaRepository;
     private final AvaliacaoVOMapper avaliacaoVOMapper;
 
     public AvaliacaoRepositoryGateway(RestauranteRepository restauranteRepository,
-                                      RestauranteRepositoryGateway restauranteRepositoryGateway,
-                                      ReservaRepository reservaRepository, AvaliacaoVOMapper avaliacaoVOMapper) {
+                                      ReservaRepository reservaRepository,
+                                      AvaliacaoVOMapper avaliacaoVOMapper) {
         this.restauranteRepository = restauranteRepository;
-        this.restauranteRepositoryGateway = restauranteRepositoryGateway;
         this.reservaRepository = reservaRepository;
         this.avaliacaoVOMapper = avaliacaoVOMapper;
     }
@@ -47,8 +47,8 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
 
         List<AvaliacaoVO> avaliacaoList = new ArrayList<>();
 
-        if (Objects.nonNull(restauranteCollection.getAvaliacoes()) &&
-            !restauranteCollection.getAvaliacoes().isEmpty()) {
+        if (Objects.nonNull(restauranteCollection.getAvaliacoes())
+            && !restauranteCollection.getAvaliacoes().isEmpty()) {
             avaliacaoList.addAll(restauranteCollection.getAvaliacoes());
         }
 
@@ -66,10 +66,12 @@ public class AvaliacaoRepositoryGateway implements AvaliacaoGateway {
 
     @Override
     public List<AvaliacaoDomain> listByIdRestaurante(String idRestaurante) {
-        RestauranteCollection restauranteCollection = restauranteRepositoryGateway
-            .findRestauranteCollection(idRestaurante);
+        RestauranteCollection restauranteCollection = restauranteRepository.findById(idRestaurante)
+            .orElseThrow(() ->
+                new NaoEncontradoException(
+                    String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
 
-        if (restauranteCollection.getAvaliacoes() == null || restauranteCollection.getAvaliacoes().isEmpty()) {
+        if (isNull(restauranteCollection.getAvaliacoes()) || restauranteCollection.getAvaliacoes().isEmpty()) {
             throw new StatusReservaException(String.format(
                 "O Restaurante com id:'%s' não possui nenhuma avaliação até o momento",
                 idRestaurante));

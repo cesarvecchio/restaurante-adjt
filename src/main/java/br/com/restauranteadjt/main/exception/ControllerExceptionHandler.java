@@ -1,12 +1,11 @@
 package br.com.restauranteadjt.main.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.time.Instant;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -16,12 +15,12 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Nao Encontrado Exception")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
+            .timestamp(Instant.now())
+            .status(status.value())
+            .error("Nao Encontrado Exception")
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
         return ResponseEntity.status(status).body(standardError);
     }
@@ -31,12 +30,12 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Já possui cadastro!")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
+            .timestamp(Instant.now())
+            .status(status.value())
+            .error("Já possui cadastro!")
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
         return ResponseEntity.status(status).body(standardError);
     }
@@ -46,12 +45,12 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Status Reserva!")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
+            .timestamp(Instant.now())
+            .status(status.value())
+            .error("Status Reserva!")
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
         return ResponseEntity.status(status).body(standardError);
     }
@@ -61,12 +60,12 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Reserva!")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
+            .timestamp(Instant.now())
+            .status(status.value())
+            .error("Reserva!")
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
         return ResponseEntity.status(status).body(standardError);
     }
@@ -76,12 +75,12 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Já Possui Reserva!")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
+            .timestamp(Instant.now())
+            .status(status.value())
+            .error("Já Possui Reserva!")
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
         return ResponseEntity.status(status).body(standardError);
     }
@@ -91,12 +90,12 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
 
         StandardError standardError = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Data Invalida!")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
+            .timestamp(Instant.now())
+            .status(status.value())
+            .error("Data Invalida!")
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
         return ResponseEntity.status(status).body(standardError);
     }

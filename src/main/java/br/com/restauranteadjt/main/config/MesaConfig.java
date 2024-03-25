@@ -7,7 +7,6 @@ import br.com.restauranteadjt.infrastructure.gateways.MesaRepositoryGateway;
 import br.com.restauranteadjt.infrastructure.gateways.RestauranteRepositoryGateway;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.MesaVOMapper;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
-import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.infrastructure.presenter.MesaPresenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,13 +15,13 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Configuration
 public class MesaConfig {
     @Bean
-    MesaUseCase mesaUseCase(MesaGateway mesaGateway){
+    MesaUseCase mesaUseCase(MesaGateway mesaGateway) {
         return new MesaUseCase(mesaGateway);
     }
 
     @Bean
     MesaGateway mesaGateway(MesaVOMapper mesaVOMapper, RestauranteRepositoryGateway restauranteRepositoryGateway,
-                            MongoTemplate mongoTemplate, ReservaRepository reservaRepository){
+                            MongoTemplate mongoTemplate, ReservaRepository reservaRepository) {
         return new MesaRepositoryGateway(mesaVOMapper, restauranteRepositoryGateway, mongoTemplate, reservaRepository);
     }
 

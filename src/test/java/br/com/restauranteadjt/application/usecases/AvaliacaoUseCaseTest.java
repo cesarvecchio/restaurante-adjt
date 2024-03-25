@@ -1,20 +1,21 @@
 package br.com.restauranteadjt.application.usecases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.restauranteadjt.application.gateways.AvaliacaoGateway;
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
 import br.com.restauranteadjt.domain.enums.PontuacaoEnum;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
-public class AvaliacaoUseCaseTest {
+class AvaliacaoUseCaseTest {
     @Mock
     private AvaliacaoGateway avaliacaoGateway;
 
@@ -35,11 +36,11 @@ public class AvaliacaoUseCaseTest {
     }
 
     @Test
-    void deveCriarAvaliacao(){
+    void deveCriarAvaliacao() {
         var idReserva = "65f252a447277444c60898ae";
         var avaliacaoDomain = new AvaliacaoDomain(
-                PontuacaoEnum.PONTOS_5,
-                "Comentario"
+            PontuacaoEnum.PONTOS_5,
+            "Comentario"
         );
 
         when(avaliacaoGateway.create(idReserva, avaliacaoDomain)).thenReturn(avaliacaoDomain);
@@ -52,11 +53,11 @@ public class AvaliacaoUseCaseTest {
     }
 
     @Test
-    void deveListByIdRestaurante(){
+    void deveListByIdRestaurante() {
         var idRestaurante = "65f252a447277444c60898ae";
         var avaliacaoDomainList = List.of(new AvaliacaoDomain(
-                PontuacaoEnum.PONTOS_5,
-                "Comentario"
+            PontuacaoEnum.PONTOS_5,
+            "Comentario"
         ));
 
         when(avaliacaoGateway.listByIdRestaurante(idRestaurante)).thenReturn(avaliacaoDomainList);

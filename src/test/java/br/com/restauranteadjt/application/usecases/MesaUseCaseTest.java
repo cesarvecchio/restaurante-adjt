@@ -48,24 +48,24 @@ public class MesaUseCaseTest {
             var statusMesa = StatusMesa.OCUPADA;
 
             var mesaDomainLista = List.of(new MesaDomain(
-                    idRestaurante,
-                    "teste@teste.com",
-                    StatusMesa.OCUPADA
+                idRestaurante,
+                "teste@teste.com",
+                StatusMesa.OCUPADA
             ));
 
             when(mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa))
-                    .thenReturn(mesaDomainLista);
+                idRestaurante, dataReserva, horaReserva, statusMesa))
+                .thenReturn(mesaDomainLista);
 
             var mesaListaObtida = mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa);
+                idRestaurante, dataReserva, horaReserva, statusMesa);
 
             assertEquals(mesaDomainLista, mesaListaObtida);
 
             verify(mesaGateway, times(1))
-                    .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                            idRestaurante, dataReserva, horaReserva, statusMesa
-                    );
+                .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+                    idRestaurante, dataReserva, horaReserva, statusMesa
+                );
         }
     }
 
@@ -76,13 +76,13 @@ public class MesaUseCaseTest {
             var idReserva = "65f252a447277444c60898ae";
             var status = StatusMesa.FINALIZADA;
             var mesaDomain = new MesaDomain(
-                    idReserva,
-                    "teste@teste.com",
-                    status
+                idReserva,
+                "teste@teste.com",
+                status
             );
 
             when(mesaGateway.update(idReserva, status))
-                    .thenReturn(mesaDomain);
+                .thenReturn(mesaDomain);
 
             var mesaObtida = mesaUseCase.update(idReserva, status);
 

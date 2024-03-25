@@ -1,19 +1,18 @@
 package br.com.restauranteadjt.infrastructure.presenter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import br.com.restauranteadjt.domain.enums.PontuacaoEnum;
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.AvaliacaoResponse;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AvaliacaoPresenterTest {
     private final AvaliacaoPresenter avaliacaoPresenter = new AvaliacaoPresenter();
 
     @Test
-    void deveRetornarResponseAvaliacao(){
+    void deveRetornarResponseAvaliacao() {
         var avaliacao = gerarAvaliacaoResponse();
         var statusHttp = HttpStatusCode.valueOf(200);
 
@@ -24,7 +23,7 @@ class AvaliacaoPresenterTest {
     }
 
     @Test
-    void deveRetornarResponseAvaliacaoLista(){
+    void deveRetornarResponseAvaliacaoLista() {
         var avaliacao = List.of(gerarAvaliacaoResponse());
         var statusHttp = HttpStatusCode.valueOf(200);
 
@@ -34,10 +33,10 @@ class AvaliacaoPresenterTest {
         assertEquals(statusHttp, response.getStatusCode());
     }
 
-    private AvaliacaoResponse gerarAvaliacaoResponse(){
+    private AvaliacaoResponse gerarAvaliacaoResponse() {
         return new AvaliacaoResponse(
-                PontuacaoEnum.PONTO_1,
-                "Comentario"
+            PontuacaoEnum.PONTO_1,
+            "Comentario"
         );
     }
 }

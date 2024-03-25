@@ -1,20 +1,20 @@
 package br.com.restauranteadjt.infrastructure.gateways.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
 import br.com.restauranteadjt.domain.enums.PontuacaoEnum;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.AvaliacaoVO;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 class AvaliacaoVOMapperTest {
     private final AvaliacaoVOMapper avaliacaoVOMapper = new AvaliacaoVOMapper();
 
     @Test
-    void deveConverterDomainParaVO(){
+    void deveConverterDomainParaVO() {
         var domain = new AvaliacaoDomain(
-                PontuacaoEnum.PONTO_1,
-                "Comentario"
+            PontuacaoEnum.PONTO_1,
+            "Comentario"
         );
 
         var vo = avaliacaoVOMapper.toVO(domain);
@@ -24,10 +24,10 @@ class AvaliacaoVOMapperTest {
     }
 
     @Test
-    void deveConverterVOParaDomain(){
+    void deveConverterVOParaDomain() {
         var vo = new AvaliacaoVO(
-                PontuacaoEnum.PONTO_1,
-                "Comentario"
+            PontuacaoEnum.PONTO_1,
+            "Comentario"
         );
 
         var domain = avaliacaoVOMapper.toDomain(vo);

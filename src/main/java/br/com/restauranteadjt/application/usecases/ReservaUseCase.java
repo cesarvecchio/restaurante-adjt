@@ -1,9 +1,7 @@
 package br.com.restauranteadjt.application.usecases;
 
 import br.com.restauranteadjt.application.gateways.ReservaGateway;
-import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.entity.ReservaDomain;
-import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 
 public class ReservaUseCase {
     private final ReservaGateway reservaGateway;
@@ -12,7 +10,7 @@ public class ReservaUseCase {
         this.reservaGateway = reservaGateway;
     }
 
-    public ReservaDomain create(String idRestaurante, ReservaDomain reservaDomain){
+    public ReservaDomain create(String idRestaurante, ReservaDomain reservaDomain) {
         return reservaGateway.create(idRestaurante, reservaDomain);
     }
 }

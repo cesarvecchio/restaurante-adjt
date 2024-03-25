@@ -66,14 +66,14 @@ class RestauranteControllerIT {
             );
 
             given()
-                .filter(new AllureRestAssured())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(restauranteRequest)
-            .when()
-                .post("/restaurantes")
-            .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .body(matchesJsonSchemaInClasspath("schemas/restaurante.schema.json"));
+                    .filter(new AllureRestAssured())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(restauranteRequest)
+                    .when()
+                    .post("/restaurantes")
+                    .then()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/restaurante.schema.json"));
         }
 
         @Test
@@ -84,16 +84,16 @@ class RestauranteControllerIT {
                     "<capacidade>10</capacidade></restaurante>";
 
             given()
-                .filter(new AllureRestAssured())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(xmlPayload)
-            .when()
-                .post("/restaurantes")
-            .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
-                .body("error", equalTo("Bad Request"))
-                .body("path", equalTo("/restaurantes"));
+                    .filter(new AllureRestAssured())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(xmlPayload)
+                    .when()
+                    .post("/restaurantes")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
+                    .body("error", equalTo("Bad Request"))
+                    .body("path", equalTo("/restaurantes"));
         }
 
         @Test
@@ -111,21 +111,21 @@ class RestauranteControllerIT {
             );
 
             given()
-                .filter(new AllureRestAssured())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(restauranteRequest)
-            .when()
-                .post("/restaurantes")
-            .then()
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
-                .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
-                .body("error", equalTo("Já possui cadastro!"))
-                .body("message", equalTo(String.format(
-                        "Restaurante com nome:'%s', " +
-                        "tipoCozinha:'%s' e localizacao:'%s' " +
-                        "já está cadastrado no sistema", nome, tipoCozinha, localizacao))
-                )
-                .body("path", equalTo("/restaurantes"));
+                    .filter(new AllureRestAssured())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(restauranteRequest)
+                    .when()
+                    .post("/restaurantes")
+                    .then()
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
+                    .body("error", equalTo("Já possui cadastro!"))
+                    .body("message", equalTo(String.format(
+                            "Restaurante com nome:'%s', " +
+                                    "tipoCozinha:'%s' e localizacao:'%s' " +
+                                    "já está cadastrado no sistema", nome, tipoCozinha, localizacao))
+                    )
+                    .body("path", equalTo("/restaurantes"));
         }
     }
 
@@ -133,7 +133,7 @@ class RestauranteControllerIT {
     class BuscarRestaurante {
 
         @ParameterizedTest
-        @CsvSource(value={
+        @CsvSource(value = {
                 "Pizza Hut; ; ",
                 " ;Pizzaria; ",
                 " ; ;R. Carlos Weber, 344",
@@ -144,16 +144,16 @@ class RestauranteControllerIT {
         }, delimiter = ';')
         void devePermitirBuscarRestaurantePorNomeEOuTipoCozinhaEOuLocalizacao_InformandoSomenteNome(String nome, String tipoCozinha, String localizacao) {
             given()
-                .filter(new AllureRestAssured())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .queryParam("nome", nome)
-                .queryParam("tipoCozinha", tipoCozinha)
-                .queryParam("endereco", localizacao)
-            .when()
-                .get("/restaurantes")
-            .then()
-                .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("schemas/restaurante-list.schema.json"));
+                    .filter(new AllureRestAssured())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .queryParam("nome", nome)
+                    .queryParam("tipoCozinha", tipoCozinha)
+                    .queryParam("endereco", localizacao)
+                    .when()
+                    .get("/restaurantes")
+                    .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/restaurante-list.schema.json"));
         }
     }
 

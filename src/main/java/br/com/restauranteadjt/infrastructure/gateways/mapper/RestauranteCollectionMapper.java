@@ -15,7 +15,7 @@ public class RestauranteCollectionMapper {
         );
     }
 
-    public RestauranteDomain toDomainObj(RestauranteCollection restauranteCollection){
+    public RestauranteDomain toDomainObj(RestauranteCollection restauranteCollection) {
         return new RestauranteDomain(
                 restauranteCollection.getId(),
                 restauranteCollection.getNome(),
