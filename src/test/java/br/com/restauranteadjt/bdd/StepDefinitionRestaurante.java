@@ -37,11 +37,13 @@ public class StepDefinitionRestaurante {
 
         return response.then().extract().as(RestauranteResponse.class);
     }
+
     @Então("o restaurante é criado com sucesso")
     public void o_restaurante_é_criado_com_sucesso() {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
     @Então("deve ser apresentado")
     public void deve_ser_apresentado() {
         response.then()
@@ -49,11 +51,11 @@ public class StepDefinitionRestaurante {
 
     }
 
-
     @Dado("que um restaurante foi criado")
     public void que_um_restaurante_foi_criado() {
         restauranteResponse = criar_um_novo_restaurante();
     }
+
     @Quando("realizar a busca")
     @SuppressWarnings("unchecked")
     public void realizar_a_busca() {
@@ -61,11 +63,13 @@ public class StepDefinitionRestaurante {
                 .get(ENDPOINT_API_RESTAURANTE +
                         "?nome=" + restauranteResponse.nome() +
                         "&tipoCozinha=" + restauranteResponse.tipoCozinha() +
-                        "&endereco="+ restauranteResponse.localizacao());
+                        "&endereco=" + restauranteResponse.localizacao());
 
         restauranteResponseList = new ArrayList<>(response.then().extract()
-                .as(new TypeReference<List<RestauranteResponse>>(){}.getType()));
+                .as(new TypeReference<List<RestauranteResponse>>() {
+                }.getType()));
     }
+
     @Então("o restaurante deve ser apresentado com sucesso")
     public void o_restaurante_deve_ser_apresentado_com_sucesso() {
         response.then()

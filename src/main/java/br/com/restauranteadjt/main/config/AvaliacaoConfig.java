@@ -4,7 +4,6 @@ import br.com.restauranteadjt.application.gateways.AvaliacaoGateway;
 import br.com.restauranteadjt.application.usecases.AvaliacaoUseCase;
 import br.com.restauranteadjt.infrastructure.controllers.mapper.AvaliacaoDTOMapper;
 import br.com.restauranteadjt.infrastructure.gateways.AvaliacaoRepositoryGateway;
-import br.com.restauranteadjt.infrastructure.gateways.RestauranteRepositoryGateway;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.AvaliacaoVOMapper;
 import br.com.restauranteadjt.infrastructure.persistence.repository.ReservaRepository;
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
@@ -16,26 +15,25 @@ import org.springframework.context.annotation.Configuration;
 public class AvaliacaoConfig {
 
     @Bean
-    AvaliacaoUseCase avaliacaoUseCase(AvaliacaoGateway avaliacaoGateway){
+    AvaliacaoUseCase avaliacaoUseCase(AvaliacaoGateway avaliacaoGateway) {
         return new AvaliacaoUseCase(avaliacaoGateway);
     }
 
     @Bean
     AvaliacaoGateway avaliacaoGateway(RestauranteRepository restauranteRepository,
-                                      RestauranteRepositoryGateway restauranteRepositoryGateway,
-                                      ReservaRepository reservaRepository, AvaliacaoVOMapper avaliacaoVOMapper) {
+                                      ReservaRepository reservaRepository,
+                                      AvaliacaoVOMapper avaliacaoVOMapper) {
 
-        return new AvaliacaoRepositoryGateway(restauranteRepository, restauranteRepositoryGateway,
-                reservaRepository, avaliacaoVOMapper);
+        return new AvaliacaoRepositoryGateway(restauranteRepository, reservaRepository, avaliacaoVOMapper);
     }
 
     @Bean
-    AvaliacaoVOMapper avaliacaoVOMapper(){
+    AvaliacaoVOMapper avaliacaoVOMapper() {
         return new AvaliacaoVOMapper();
     }
 
     @Bean
-    AvaliacaoDTOMapper avaliacaoDTOMapper(){
+    AvaliacaoDTOMapper avaliacaoDTOMapper() {
         return new AvaliacaoDTOMapper();
     }
 

@@ -42,9 +42,6 @@ public class AvaliacaoRepositoryGatewayTest {
     private final RestauranteCollectionMapper restauranteCollectionMapper = new RestauranteCollectionMapper();
 
     @Mock
-    private RestauranteRepositoryGateway restauranteRepositoryGateway;
-
-    @Mock
     private ReservaRepository reservaRepository;
 
     @Mock
@@ -58,7 +55,7 @@ public class AvaliacaoRepositoryGatewayTest {
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        avaliacaoGateway = new AvaliacaoRepositoryGateway(restauranteRepository, restauranteRepositoryGateway, reservaRepository, avaliacaoVOMapper);
+        avaliacaoGateway = new AvaliacaoRepositoryGateway(restauranteRepository, reservaRepository, avaliacaoVOMapper);
     }
 
     @AfterEach
@@ -201,7 +198,7 @@ public class AvaliacaoRepositoryGatewayTest {
             RestauranteDomain restauranteDomain = buildRestauranteDomain();
             RestauranteCollection restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(idRestaurante)).thenReturn(restauranteCollection);
+            when(restauranteRepository.findById(idRestaurante)).thenReturn(Optional.of(restauranteCollection));
 
             //Act
             assertThatThrownBy(() -> avaliacaoGateway.listByIdRestaurante(idRestaurante))
@@ -211,7 +208,7 @@ public class AvaliacaoRepositoryGatewayTest {
                 );
 
             //Assert
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(idRestaurante);
+            verify(restauranteRepository, times(1)).findById(idRestaurante);
         }
 
         @Test
@@ -222,14 +219,14 @@ public class AvaliacaoRepositoryGatewayTest {
             RestauranteCollection restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
             restauranteCollection.setAvaliacoes(List.of(new AvaliacaoVO(PontuacaoEnum.PONTOS_2, "Mais ou menos")));
 
-            when(restauranteRepositoryGateway.findRestauranteCollection(idRestaurante)).thenReturn(restauranteCollection);
-            when(restauranteRepositoryGateway.findRestauranteCollection(idRestaurante)).thenReturn(restauranteCollection);
+            when(restauranteRepository.findById(idRestaurante)).thenReturn(Optional.of(restauranteCollection));
+            when(restauranteRepository.findById(idRestaurante)).thenReturn(Optional.of(restauranteCollection));
 
             //Act
             List<AvaliacaoDomain> avaliacoes = avaliacaoGateway.listByIdRestaurante(idRestaurante);
 
             //Assert
-            verify(restauranteRepositoryGateway, times(1)).findRestauranteCollection(idRestaurante);
+            verify(restauranteRepository, times(1)).findById(idRestaurante);
             assertEquals(1, avaliacoes.size());
         }
     }

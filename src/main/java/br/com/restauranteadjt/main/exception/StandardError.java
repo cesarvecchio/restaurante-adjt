@@ -1,10 +1,9 @@
 package br.com.restauranteadjt.main.exception;
 
+import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.time.Instant;
 
 @Getter
 @SuperBuilder

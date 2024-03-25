@@ -1,7 +1,5 @@
 package br.com.restauranteadjt.infrastructure.controllers.dto.response;
 
-import br.com.restauranteadjt.domain.enums.StatusMesa;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 

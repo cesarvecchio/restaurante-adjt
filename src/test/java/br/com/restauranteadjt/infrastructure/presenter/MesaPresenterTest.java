@@ -1,19 +1,18 @@
 package br.com.restauranteadjt.infrastructure.presenter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.controllers.dto.MesaResponse;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MesaPresenterTest {
     private final MesaPresenter mesaPresenter = new MesaPresenter();
 
     @Test
-    void deveRetornarResponseMesa(){
+    void deveRetornarResponseMesa() {
         var mesa = gerarMesa();
         var status = HttpStatusCode.valueOf(200);
 
@@ -24,7 +23,7 @@ class MesaPresenterTest {
     }
 
     @Test
-    void deveRetornarResponseMesaLista(){
+    void deveRetornarResponseMesaLista() {
         var mesa = List.of(gerarMesa());
         var status = HttpStatusCode.valueOf(200);
 
@@ -34,11 +33,11 @@ class MesaPresenterTest {
         assertEquals(status, response.getStatusCode());
     }
 
-    private MesaResponse gerarMesa(){
+    private MesaResponse gerarMesa() {
         return new MesaResponse(
-                "1",
-                "teste@teste.com",
-                StatusMesa.OCUPADA
+            "1",
+            "teste@teste.com",
+            StatusMesa.OCUPADA
         );
     }
 }

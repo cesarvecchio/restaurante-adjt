@@ -9,7 +9,6 @@ import io.gatling.javaapi.http.HttpProtocolBuilder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
@@ -33,10 +32,10 @@ public class ReservaPerformanceSimulation extends Simulation {
 
     ScenarioBuilder cenarioAdicionarReserva = scenario("Adicionar Reserva")
             .exec(session ->
-                session.set("dataReserva", LocalDate.now()
-                        .plusDays(ThreadLocalRandom.current().nextInt(1, 10000 + 1))
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                )
+                    session.set("dataReserva", LocalDate.now()
+                            .plusDays(ThreadLocalRandom.current().nextInt(1, 10000 + 1))
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            )
             .exec(session ->
                     session.set("email", Helper.criarTexto() + "albert@gmail.com")
             )
