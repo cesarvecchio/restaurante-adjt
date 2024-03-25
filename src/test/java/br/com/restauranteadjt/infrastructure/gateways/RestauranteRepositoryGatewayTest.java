@@ -1,5 +1,11 @@
 package br.com.restauranteadjt.infrastructure.gateways;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.restauranteadjt.application.gateways.RestauranteGateway;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 import br.com.restauranteadjt.infrastructure.gateways.mapper.RestauranteCollectionMapper;
@@ -7,6 +13,9 @@ import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteC
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.main.exception.CadastradoException;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -17,15 +26,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.ObjectUtils;
-
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 
 public class RestauranteRepositoryGatewayTest {
     @Mock
@@ -42,7 +42,7 @@ public class RestauranteRepositoryGatewayTest {
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         restauranteGateway = new RestauranteRepositoryGateway(restauranteRepository, restauranteCollectionMapper,
-                mongoTemplate);
+            mongoTemplate);
     }
 
     @AfterEach
@@ -57,16 +57,16 @@ public class RestauranteRepositoryGatewayTest {
             var restauranteDomain = buildRestauranteDomain();
             var restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
             var query = buildQuery(restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
-                    restauranteCollection.getLocalizacao());
+                restauranteCollection.getLocalizacao());
 
             when(mongoTemplate.find(query, RestauranteCollection.class)).thenReturn(List.of(restauranteCollection));
 
             assertThatThrownBy(() -> restauranteGateway.create(restauranteDomain))
-                    .isInstanceOf(CadastradoException.class)
-                    .hasMessage(String.format(
-                            "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
-                            restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
-                            restauranteCollection.getLocalizacao()));
+                .isInstanceOf(CadastradoException.class)
+                .hasMessage(String.format(
+                    "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
+                    restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
+                    restauranteCollection.getLocalizacao()));
 
             verify(mongoTemplate, times(1)).find(query, RestauranteCollection.class);
         }
@@ -76,7 +76,7 @@ public class RestauranteRepositoryGatewayTest {
             var restauranteDomain = buildRestauranteDomain();
             var restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
             var query = buildQuery(restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
-                    restauranteCollection.getLocalizacao());
+                restauranteCollection.getLocalizacao());
 
             when(mongoTemplate.find(query, RestauranteCollection.class)).thenReturn(List.of());
 
@@ -100,8 +100,8 @@ public class RestauranteRepositoryGatewayTest {
             when(restauranteRepository.findById(id)).thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> restauranteGateway.findById(id))
-                    .isInstanceOf(NaoEncontradoException.class)
-                    .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
+                .isInstanceOf(NaoEncontradoException.class)
+                .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
 
             verify(restauranteRepository, times(1)).findById(id);
         }
@@ -149,7 +149,7 @@ public class RestauranteRepositoryGatewayTest {
             verify(restauranteRepository, times(1)).findById(id);
         }
     }
-    
+
     @Nested
     class ValidarSeRestauranteExistePorId {
         @Test
@@ -159,8 +159,8 @@ public class RestauranteRepositoryGatewayTest {
             when(restauranteRepository.existsById(id)).thenReturn(false);
 
             assertThatThrownBy(() -> restauranteGateway.existsById(id))
-                    .isInstanceOf(NaoEncontradoException.class)
-                    .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
+                .isInstanceOf(NaoEncontradoException.class)
+                .hasMessage(String.format("Restaurante com id:'%s' não foi encontrado!", id));
 
             verify(restauranteRepository, times(1)).existsById(id);
         }
@@ -177,28 +177,28 @@ public class RestauranteRepositoryGatewayTest {
         }
     }
 
-    private RestauranteDomain buildRestauranteDomain(){
+    private RestauranteDomain buildRestauranteDomain() {
         return new RestauranteDomain(
-                "Teste",
-                "Localizacao",
-                "tipoCozinha",
-                List.of(LocalTime.of(10, 0, 0, 0)),
-                2
+            "Teste",
+            "Localizacao",
+            "tipoCozinha",
+            List.of(LocalTime.of(10, 0, 0, 0)),
+            2
         );
     }
 
-    private Query buildQuery(String nome, String tipoCozinha, String localizacao){
+    private Query buildQuery(String nome, String tipoCozinha, String localizacao) {
         Query query = new Query();
 
-        if(!ObjectUtils.isEmpty(nome)){
+        if (!ObjectUtils.isEmpty(nome)) {
             Criteria criteria = Criteria.where("nome").in(nome);
             query.addCriteria(criteria);
         }
-        if(!ObjectUtils.isEmpty(tipoCozinha)){
+        if (!ObjectUtils.isEmpty(tipoCozinha)) {
             Criteria criteria = Criteria.where("tipoCozinha").in(tipoCozinha);
             query.addCriteria(criteria);
         }
-        if(!ObjectUtils.isEmpty(localizacao)){
+        if (!ObjectUtils.isEmpty(localizacao)) {
             Criteria criteria = Criteria.where("localizacao").in(localizacao);
             query.addCriteria(criteria);
         }

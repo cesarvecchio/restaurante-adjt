@@ -7,13 +7,11 @@ import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteC
 import br.com.restauranteadjt.infrastructure.persistence.repository.RestauranteRepository;
 import br.com.restauranteadjt.main.exception.CadastradoException;
 import br.com.restauranteadjt.main.exception.NaoEncontradoException;
+import java.util.List;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.ObjectUtils;
-
-import java.util.List;
-import java.util.Optional;
 
 public class RestauranteRepositoryGateway implements RestauranteGateway {
     private final RestauranteRepository restauranteRepository;
@@ -32,12 +30,12 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
     public RestauranteDomain create(RestauranteDomain restauranteDomain) {
         RestauranteCollection restauranteCollection = restauranteCollectionMapper.toCollection(restauranteDomain);
 
-        if(!findByNomeOrTipoCozinhaOrLocalizacao(restauranteCollection.getNome(),
-                restauranteCollection.getTipoCozinha(), restauranteCollection.getLocalizacao()).isEmpty()){
+        if (!findByNomeOrTipoCozinhaOrLocalizacao(restauranteCollection.getNome(),
+            restauranteCollection.getTipoCozinha(), restauranteCollection.getLocalizacao()).isEmpty()) {
             throw new CadastradoException(String.format(
-                    "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
-                    restauranteCollection.getNome(),restauranteCollection.getTipoCozinha(),
-                    restauranteCollection.getLocalizacao()));
+                "Restaurante com nome:'%s', tipoCozinha:'%s' e localizacao:'%s' já está cadastrado no sistema",
+                restauranteCollection.getNome(), restauranteCollection.getTipoCozinha(),
+                restauranteCollection.getLocalizacao()));
         }
 
         RestauranteCollection savedRestauranteObj = restauranteRepository.save(restauranteCollection);
@@ -54,37 +52,37 @@ public class RestauranteRepositoryGateway implements RestauranteGateway {
     public List<RestauranteDomain> findByNomeOrTipoCozinhaOrLocalizacao(String nome, String tipoCozinha, String localizacao) {
         Query query = new Query();
 
-        if(!ObjectUtils.isEmpty(nome)){
+        if (!ObjectUtils.isEmpty(nome)) {
             Criteria criteria = Criteria.where("nome").in(nome);
             query.addCriteria(criteria);
         }
-        if(!ObjectUtils.isEmpty(tipoCozinha)){
+        if (!ObjectUtils.isEmpty(tipoCozinha)) {
             Criteria criteria = Criteria.where("tipoCozinha").in(tipoCozinha);
             query.addCriteria(criteria);
         }
-        if(!ObjectUtils.isEmpty(localizacao)){
+        if (!ObjectUtils.isEmpty(localizacao)) {
             Criteria criteria = Criteria.where("localizacao").in(localizacao);
             query.addCriteria(criteria);
         }
 
         return mongoTemplate.find(query, RestauranteCollection.class)
-                .stream()
-                .map(restauranteCollectionMapper::toDomainObj)
-                .toList();
+            .stream()
+            .map(restauranteCollectionMapper::toDomainObj)
+            .toList();
     }
 
-    protected RestauranteCollection findRestauranteCollection(String idRestaurante){
+    private RestauranteCollection findRestauranteCollection(String idRestaurante) {
         return restauranteRepository.findById(idRestaurante)
-                .orElseThrow(() ->
-                        new NaoEncontradoException(
-                                String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
+            .orElseThrow(() ->
+                new NaoEncontradoException(
+                    String.format("Restaurante com id:'%s' não foi encontrado!", idRestaurante)));
     }
 
     @Override
     public void existsById(String id) {
         if (!restauranteRepository.existsById(id)) {
             throw new NaoEncontradoException(
-                    String.format("Restaurante com id:'%s' não foi encontrado!", id));
+                String.format("Restaurante com id:'%s' não foi encontrado!", id));
         }
     }
 }

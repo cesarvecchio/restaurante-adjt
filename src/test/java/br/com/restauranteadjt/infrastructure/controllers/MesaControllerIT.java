@@ -28,7 +28,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.hamcrest.CoreMatchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MesaControllerTestIT {
+public class MesaControllerIT {
     @LocalServerPort
     private int port;
 

@@ -1,25 +1,24 @@
 package br.com.restauranteadjt.infrastructure.gateways.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 import br.com.restauranteadjt.infrastructure.persistence.collection.RestauranteCollection;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class RestauranteCollectionMapperTest {
     private final RestauranteCollectionMapper restauranteCollectionMapper = new RestauranteCollectionMapper();
 
     @Test
-    void deveConverterDomainParaCollection(){
+    void deveConverterDomainParaCollection() {
         var domain = new RestauranteDomain(
-                "Teste",
-                "Localização",
-                "Tipo cozinha",
-                List.of(LocalTime.now()),
-                4
+            "Teste",
+            "Localização",
+            "Tipo cozinha",
+            List.of(LocalTime.now()),
+            4
         );
 
         var collection = restauranteCollectionMapper.toCollection(domain);
@@ -32,13 +31,13 @@ class RestauranteCollectionMapperTest {
     }
 
     @Test
-    void deveConverterCollectionParaDomain(){
+    void deveConverterCollectionParaDomain() {
         var collection = new RestauranteCollection(
-                "Teste",
-                "Localização",
-                "Tipo cozinha",
-                List.of(LocalTime.now()),
-                4
+            "Teste",
+            "Localização",
+            "Tipo cozinha",
+            List.of(LocalTime.now()),
+            4
         );
 
         var domain = restauranteCollectionMapper.toDomainObj(collection);

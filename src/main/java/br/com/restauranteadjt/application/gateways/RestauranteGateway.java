@@ -1,7 +1,6 @@
 package br.com.restauranteadjt.application.gateways;
 
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
-
 import java.util.List;
 
 public interface RestauranteGateway {

@@ -1,21 +1,21 @@
 package br.com.restauranteadjt.infrastructure.gateways.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
 import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 class MesaVOMapperTest {
     private final MesaVOMapper mesaVOMapper = new MesaVOMapper();
 
     @Test
-    void deveConverterDomainParaVO(){
+    void deveConverterDomainParaVO() {
         var domain = new MesaDomain(
-                "1",
-                "teste@teste.com",
-                StatusMesa.LIVRE
+            "1",
+            "teste@teste.com",
+            StatusMesa.LIVRE
         );
 
         var vo = mesaVOMapper.toVO(domain);
@@ -26,11 +26,11 @@ class MesaVOMapperTest {
     }
 
     @Test
-    void deveConverterVOParaDomain(){
+    void deveConverterVOParaDomain() {
         var vo = new MesaVO(
-                "1",
-                "teste@teste.com",
-                StatusMesa.LIVRE
+            "1",
+            "teste@teste.com",
+            StatusMesa.LIVRE
         );
 
         var domain = mesaVOMapper.toDomain(vo);

@@ -1,0 +1,27 @@
+version: '3'
+
+networks:
+  restaurante-network:
+
+services:
+  mongodb-restaurante:
+    image: "mongo"
+    container_name: "mongodb-restaurante"
+    ports:
+      - "27017:27017"
+    networks:
+      - restaurante-network
+
+  app:
+    image: 'backend:dev'
+    build:
+      context: .
+    container_name: "backend"
+    depends_on:
+      - mongodb-restaurante
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://mongodb-restaurante:27017/restaurante?authSource=admin
+    networks:
+      - restaurante-network

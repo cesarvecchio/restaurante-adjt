@@ -5,8 +5,9 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateReser
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.ReservaResponse;
 
 public class ReservaDTOMapper {
-    public ReservaResponse toResponse(ReservaDomain domain){
+    public ReservaResponse toResponse(ReservaDomain domain) {
         return new ReservaResponse(
+                domain.id(),
                 domain.dataReserva(),
                 domain.horaReserva(),
                 domain.nome(),
@@ -15,8 +16,9 @@ public class ReservaDTOMapper {
         );
     }
 
-    public ReservaDomain toDomain(CreateReservaRequest request){
+    public ReservaDomain toDomain(CreateReservaRequest request) {
         return new ReservaDomain(
+                null,
                 request.dataReserva(),
                 request.horaReserva(),
                 request.nome(),

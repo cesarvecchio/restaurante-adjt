@@ -25,6 +25,16 @@ public class RestauranteCollection {
     private Integer capacidade;
     private List<AvaliacaoVO> avaliacoes;
 
+    public RestauranteCollection(String id, String nome, String localizacao, String tipoCozinha,
+                                 List<LocalTime> horariosFuncionamento, Integer capacidade) {
+        this.id = id;
+        this.nome = nome;
+        this.localizacao = localizacao;
+        this.tipoCozinha = tipoCozinha;
+        this.horariosFuncionamento = horariosFuncionamento;
+        this.capacidade = capacidade;
+    }
+
     public RestauranteCollection(String nome, String localizacao, String tipoCozinha,
                                  List<LocalTime> horariosFuncionamento, Integer capacidade) {
         this.nome = nome;

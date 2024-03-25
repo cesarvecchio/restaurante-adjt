@@ -1,28 +1,22 @@
 package br.com.restauranteadjt.application.usecases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import br.com.restauranteadjt.application.gateways.MesaGateway;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
-import br.com.restauranteadjt.infrastructure.gateways.MesaRepositoryGateway;
-import br.com.restauranteadjt.infrastructure.persistence.collection.ReservaCollection;
-import br.com.restauranteadjt.infrastructure.persistence.valueObjects.MesaVO;
-import br.com.restauranteadjt.main.exception.NaoEncontradoException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 public class MesaUseCaseTest {
     @Mock
@@ -54,24 +48,24 @@ public class MesaUseCaseTest {
             var statusMesa = StatusMesa.OCUPADA;
 
             var mesaDomainLista = List.of(new MesaDomain(
-                    idRestaurante,
-                    "teste@teste.com",
-                    StatusMesa.OCUPADA
+                idRestaurante,
+                "teste@teste.com",
+                StatusMesa.OCUPADA
             ));
 
             when(mesaGateway.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa))
-                    .thenReturn(mesaDomainLista);
+                idRestaurante, dataReserva, horaReserva, statusMesa))
+                .thenReturn(mesaDomainLista);
 
             var mesaListaObtida = mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa);
+                idRestaurante, dataReserva, horaReserva, statusMesa);
 
             assertEquals(mesaDomainLista, mesaListaObtida);
 
             verify(mesaGateway, times(1))
-                    .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                            idRestaurante, dataReserva, horaReserva, statusMesa
-                    );
+                .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+                    idRestaurante, dataReserva, horaReserva, statusMesa
+                );
         }
     }
 
@@ -82,13 +76,13 @@ public class MesaUseCaseTest {
             var idReserva = "65f252a447277444c60898ae";
             var status = StatusMesa.FINALIZADA;
             var mesaDomain = new MesaDomain(
-                    idReserva,
-                    "teste@teste.com",
-                    status
+                idReserva,
+                "teste@teste.com",
+                status
             );
 
             when(mesaGateway.update(idReserva, status))
-                    .thenReturn(mesaDomain);
+                .thenReturn(mesaDomain);
 
             var mesaObtida = mesaUseCase.update(idReserva, status);
 
