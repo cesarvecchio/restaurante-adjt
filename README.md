@@ -65,11 +65,27 @@ make docker-build
 ```sh
 make docker-start
 ```
-#### 4) Executar os testes de performance:
+#### 4) Executar os testes de performance de restaurante :
+```sh
+make performance-restaurante
+```
+#### 5) Executar os testes de performance de reserva :
+```sh
+make performance-reserva
+```
+#### 6) Executar os testes de performance de mesa :
+```sh
+make performance-mesa
+```
+#### 7) Executar os testes de performance de avaliacao :
+```sh
+make performance-avaliacao
+```
+#### Obs.: Caso queira executar todos os testes de performance utilize o seguinte comando:
 ```sh
 make performance-test
 ```
-#### 5) Remover os contêineres e recursos que foram criados junto com eles:
+#### 8) Remover os contêineres e recursos que foram criados junto com eles:
 ```sh
 make docker-stop
 ```

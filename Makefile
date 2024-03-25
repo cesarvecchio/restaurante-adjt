@@ -13,6 +13,18 @@ system-test:
 performance-test: gradle-clean
 	gradle gatlingRun
 
+performance-restaurante: gradle-clean
+	gradle gatlingRun-br.com.restauranteadjt.performance.RestaurantePerformanceSimulation
+
+performance-reserva: gradle-clean
+	gradle gatlingRun-br.com.restauranteadjt.performance.ReservaPerformanceSimulation
+
+performance-mesa: gradle-clean
+	gradle gatlingRun-br.com.restauranteadjt.performance.MesaPerformanceSimulation
+
+performance-avaliacao: gradle-clean
+	gradle gatlingRun-br.com.restauranteadjt.performance.AvaliacaoPerformanceSimulation
+
 test: unit-test integration-test
 
 gradle-clean:
