@@ -52,7 +52,7 @@ O fluxo recomendado para os testes de performance seguem
 na mesma linha dos testes de sistema,
 iniciar 2 contêineres docker, um executando a aplicação
 e outro executando um banco de dados mongodb.<br>
-Para isso vamos seguir essas 5 etapas:<br>
+Para isso vamos seguir essas 8 etapas:<br>
 #### 1) Realizar o build do projeto:
 ```sh
 make build-project
