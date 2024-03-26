@@ -1,19 +1,18 @@
 package br.com.restauranteadjt.infrastructure.presenter;
 
-import br.com.restauranteadjt.infrastructure.controllers.dto.response.ReservaResponse;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatusCode;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import br.com.restauranteadjt.infrastructure.controllers.dto.response.ReservaResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatusCode;
 
 class ReservaPresenterTest {
     private final ReservaPresenter reservaPresenter = new ReservaPresenter();
 
     @Test
-    void deveRestornarResponseReserva(){
+    void deveRestornarResponseReserva() {
         var reserva = gerarReserva();
         var status = HttpStatusCode.valueOf(200);
 
@@ -23,8 +22,9 @@ class ReservaPresenterTest {
         assertEquals(status, response.getStatusCode());
     }
 
-    private ReservaResponse gerarReserva(){
+    private ReservaResponse gerarReserva() {
         return new ReservaResponse(
+                "6600a190665effa378d304eb",
                 LocalDate.now(),
                 LocalTime.now(),
                 "Teste",

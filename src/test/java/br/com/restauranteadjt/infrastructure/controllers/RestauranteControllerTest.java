@@ -1,13 +1,5 @@
 package br.com.restauranteadjt.infrastructure.controllers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import br.com.restauranteadjt.application.usecases.RestauranteUseCase;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
 import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateRestauranteRequest;
@@ -16,8 +8,6 @@ import br.com.restauranteadjt.infrastructure.presenter.RestaurantePresenter;
 import br.com.restauranteadjt.main.exception.ControllerExceptionHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +16,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.time.LocalTime;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class RestauranteControllerTest {
 
@@ -47,12 +46,12 @@ public class RestauranteControllerTest {
         RestauranteController restauranteController = new RestauranteController(restauranteUseCase, restauranteDTOMapper, restaurantePresenter);
 
         mockMvc = MockMvcBuilders.standaloneSetup(restauranteController)
-            .setControllerAdvice(new ControllerExceptionHandler())
-            .addFilter((request, response, chain) -> {
-                response.setCharacterEncoding("UTF-8");
-                chain.doFilter(request, response);
-            }, "/*")
-            .build();
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .addFilter((request, response, chain) -> {
+                    response.setCharacterEncoding("UTF-8");
+                    chain.doFilter(request, response);
+                }, "/*")
+                .build();
     }
 
     @AfterEach
@@ -67,14 +66,14 @@ public class RestauranteControllerTest {
         RestauranteDomain restauranteDomain = restauranteDTOMapper.toRestauranteDomain(createRestauranteRequest);
 
         when(restauranteUseCase.create(any(RestauranteDomain.class)))
-            .thenReturn(restauranteDomain);
+                .thenReturn(restauranteDomain);
 
         // Act & Assert
         mockMvc.perform(post("/restaurantes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(createRestauranteRequest))
-            )
-            .andExpect(status().isCreated());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(createRestauranteRequest))
+                )
+                .andExpect(status().isCreated());
 
         verify(restauranteUseCase, times(1)).create(any(RestauranteDomain.class));
     }
@@ -87,14 +86,14 @@ public class RestauranteControllerTest {
         List<RestauranteDomain> resaurantes = List.of(restauranteDomain);
 
         when(restauranteUseCase.findByNomeOrTipoCozinhaOrLocalizacao(any(), any(), any()))
-            .thenReturn(resaurantes);
+                .thenReturn(resaurantes);
 
         // Act & Assert
         mockMvc.perform(get("/restaurantes")
-                .param("nome", "teste")
-                .param("tipoCozinha", "teste")
-                .param("endereco", "teste"))
-            .andExpect(status().isOk());
+                        .param("nome", "teste")
+                        .param("tipoCozinha", "teste")
+                        .param("endereco", "teste"))
+                .andExpect(status().isOk());
 
         verify(restauranteUseCase, times(1)).findByNomeOrTipoCozinhaOrLocalizacao(any(), any(), any());
     }
@@ -105,10 +104,11 @@ public class RestauranteControllerTest {
 
     private CreateRestauranteRequest buildCreateRestauranteRequest() {
         return new CreateRestauranteRequest(
-            "Teste",
-            "Sao Paulo",
-            "Teste",
-            List.of(LocalTime.of(12, 0)),
-            10);
+                null,
+                "Teste",
+                "Sao Paulo",
+                "Teste",
+                List.of(LocalTime.of(12, 0)),
+                10);
     }
 }

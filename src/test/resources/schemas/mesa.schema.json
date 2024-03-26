@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "title": "Root Schema",
+  "required": [
+    "id",
+    "emailCliente",
+    "statusMesa"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "default": "",
+      "title": "The id Schema",
+      "examples": [
+        "65f45ec843af698ea2473e29"
+      ]
+    },
+    "emailCliente": {
+      "type": "string",
+      "default": "",
+      "title": "The emailCliente Schema",
+      "examples": [
+        "joao09@gmail.com"
+      ]
+    },
+    "statusMesa": {
+      "type": "string",
+      "default": "",
+      "title": "The statusMesa Schema",
+      "examples": [
+        "FINALIZADA"
+      ]
+    }
+  },
+  "examples": [{
+    "id": "65f45ec843af698ea2473e29",
+    "emailCliente": "joao09@gmail.com",
+    "statusMesa": "FINALIZADA"
+  }]
+}

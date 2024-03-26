@@ -5,7 +5,7 @@ import br.com.restauranteadjt.infrastructure.controllers.dto.request.CreateResta
 import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 
 public class RestauranteDTOMapper {
-    public RestauranteResponse toResponse(RestauranteDomain domainObj){
+    public RestauranteResponse toResponse(RestauranteDomain domainObj) {
         return new RestauranteResponse(
                 domainObj.getId(),
                 domainObj.getNome(),
@@ -16,8 +16,9 @@ public class RestauranteDTOMapper {
         );
     }
 
-    public RestauranteDomain toRestauranteDomain(CreateRestauranteRequest request){
+    public RestauranteDomain toRestauranteDomain(CreateRestauranteRequest request) {
         return new RestauranteDomain(
+                request.id(),
                 request.nome(),
                 request.localizacao(),
                 request.tipoCozinha(),

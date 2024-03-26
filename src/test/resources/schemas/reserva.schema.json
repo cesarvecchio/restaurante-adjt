@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "title": "Root Schema",
+  "required": [
+    "dataReserva",
+    "horaReserva",
+    "nome",
+    "email",
+    "telefone"
+  ],
+  "properties": {
+    "dataReserva": {
+      "type": "string",
+      "default": "",
+      "title": "The dataReserva Schema",
+      "examples": [
+        "2024-06-15"
+      ]
+    },
+    "horaReserva": {
+      "type": "string",
+      "default": "",
+      "title": "The horaReserva Schema",
+      "examples": [
+        "18:00:00"
+      ]
+    },
+    "nome": {
+      "type": "string",
+      "default": "",
+      "title": "The nome Schema",
+      "examples": [
+        "Guilherme Matos de Carvalho"
+      ]
+    },
+    "email": {
+      "type": "string",
+      "default": "",
+      "title": "The email Schema",
+      "examples": [
+        "guilherme@gmail.com"
+      ]
+    },
+    "telefone": {
+      "type": "string",
+      "default": "",
+      "title": "The telefone Schema",
+      "examples": [
+        "11981281123"
+      ]
+    }
+  },
+  "examples": [{
+    "dataReserva": "2024-06-15",
+    "horaReserva": "18:00:00",
+    "nome": "Guilherme Matos de Carvalho",
+    "email": "guilherme@gmail.com",
+    "telefone": "11981281123"
+  }]
+}

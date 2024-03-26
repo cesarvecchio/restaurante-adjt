@@ -1,19 +1,18 @@
 package br.com.restauranteadjt.infrastructure.presenter;
 
-import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatusCode;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import br.com.restauranteadjt.infrastructure.controllers.dto.response.RestauranteResponse;
 import java.time.LocalTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatusCode;
 
 class RestaurantePresenterTest {
     private final RestaurantePresenter restaurantePresenter = new RestaurantePresenter();
 
     @Test
-    void deveGerarResponseRestaurante(){
+    void deveGerarResponseRestaurante() {
         var restaurante = gerarRestaurante();
         var status = HttpStatusCode.valueOf(200);
 
@@ -24,7 +23,7 @@ class RestaurantePresenterTest {
     }
 
     @Test
-    void deveGerarResponseRestauranteLista(){
+    void deveGerarResponseRestauranteLista() {
         var restaurante = List.of(gerarRestaurante());
         var status = HttpStatusCode.valueOf(200);
 
@@ -34,14 +33,14 @@ class RestaurantePresenterTest {
         assertEquals(status, response.getStatusCode());
     }
 
-    private RestauranteResponse gerarRestaurante(){
+    private RestauranteResponse gerarRestaurante() {
         return new RestauranteResponse(
-                "1",
-                "Teste",
-                "Localizacao",
-                "TIpo cozinha",
-                 List.of(LocalTime.now()),
-                2
+            "1",
+            "Teste",
+            "Localizacao",
+            "TIpo cozinha",
+            List.of(LocalTime.now()),
+            2
         );
     }
 

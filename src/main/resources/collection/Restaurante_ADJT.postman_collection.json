@@ -1,0 +1,262 @@
+{
+	"info": {
+		"_postman_id": "a0026107-2ef5-4d63-b883-7b32b3c78c86",
+		"name": "Restaurante ADJT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12369015"
+	},
+	"item": [
+		{
+			"name": "Restaurante",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\" : \"Burger King\",\r\n    \"localizacao\" : \"Paulista\",\r\n    \"tipoCozinha\" : \"Fast Food\",\r\n    \"horariosFuncionamento\" : [\r\n        \"22:00:00\"\r\n    ],\r\n    \"capacidade\" : 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/restaurantes",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindAllOrByNomeOrTipoCozinhaOrLocalizacao",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/restaurantes?nome=Burger King&tipoCozinha=Fast Food&endereco=Jacu Pessego",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "Burger King"
+								},
+								{
+									"key": "tipoCozinha",
+									"value": "Fast Food"
+								},
+								{
+									"key": "endereco",
+									"value": "Jacu Pessego"
+								},
+								{
+									"key": "endereco",
+									"value": "Paulista",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reserva",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataReserva\" : \"2024-03-28\",\r\n    \"horaReserva\" : \"22:00:00\",\r\n    \"nome\": \"Cesar\",\r\n    \"email\": \"cesar5@gmail.com\",\r\n    \"telefone\": \"40028922\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reservas/:idRestaurante",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reservas",
+								":idRestaurante"
+							],
+							"variable": [
+								{
+									"key": "idRestaurante",
+									"value": "66020a7585086945251cd546",
+									"description": "Id gerado ao cadastrar um restaurante"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mesa",
+			"item": [
+				{
+					"name": "UpdateStatusMesa",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"statusMesa\": \"FINALIZADA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/mesas/:idReserva",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mesas",
+								":idReserva"
+							],
+							"variable": [
+								{
+									"key": "idReserva",
+									"value": "66020acd85086945251cd547",
+									"description": "Id gerado ao efetuar uma reserva"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/mesas/:idRestaurante/2024-03-28/22:00:00",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mesas",
+								":idRestaurante",
+								"2024-03-28",
+								"22:00:00"
+							],
+							"query": [
+								{
+									"key": "statusMesa",
+									"value": "OCUPADA",
+									"disabled": true
+								},
+								{
+									"key": "statusMesa",
+									"value": "FINALIZADA",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "idRestaurante",
+									"value": "66020a7585086945251cd546"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Avaliacao",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pontuacao\": \"PONTOS_5\",\r\n    \"comentario\": \"A comida é maravilhosa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/avaliacoes/:idReserva",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"avaliacoes",
+								":idReserva"
+							],
+							"variable": [
+								{
+									"key": "idReserva",
+									"value": "66020acd85086945251cd547"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/avaliacoes/:idRestaurante",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"avaliacoes",
+								":idRestaurante"
+							],
+							"variable": [
+								{
+									"key": "idRestaurante",
+									"value": "66020a7585086945251cd546"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

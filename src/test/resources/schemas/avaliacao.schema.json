@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "title": "Root Schema",
+  "required": [
+    "pontuacao",
+    "comentario"
+  ],
+  "properties": {
+    "pontuacao": {
+      "type": "string",
+      "default": "",
+      "title": "The pontuacao Schema",
+      "examples": [
+        "PONTOS_4"
+      ]
+    },
+    "comentario": {
+      "type": "string",
+      "default": "",
+      "title": "The comentario Schema",
+      "examples": [
+        "Comida muito boa, porém demora bastante"
+      ]
+    }
+  },
+  "examples": [{
+    "pontuacao": "PONTOS_4",
+    "comentario": "Comida muito boa, porém demora bastante"
+  }]
+}

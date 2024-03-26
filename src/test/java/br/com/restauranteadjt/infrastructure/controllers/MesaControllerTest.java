@@ -1,5 +1,14 @@
 package br.com.restauranteadjt.infrastructure.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import br.com.restauranteadjt.application.usecases.MesaUseCase;
 import br.com.restauranteadjt.domain.entity.MesaDomain;
 import br.com.restauranteadjt.domain.enums.StatusMesa;
@@ -11,6 +20,10 @@ import br.com.restauranteadjt.main.exception.NaoEncontradoException;
 import br.com.restauranteadjt.main.exception.StatusReservaException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,19 +34,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 public class MesaControllerTest {
     MockMvc mockMvc;
@@ -53,12 +53,12 @@ public class MesaControllerTest {
         MesaController mesaController = new MesaController(mesaUseCase, mesaDTOMapper, mesaPresenter);
 
         mockMvc = MockMvcBuilders.standaloneSetup(mesaController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .addFilter((request, response, chain) -> {
-                    response.setCharacterEncoding("UTF-8");
-                    chain.doFilter(request, response);
-                }, "/*")
-                .build();
+            .setControllerAdvice(new ControllerExceptionHandler())
+            .addFilter((request, response, chain) -> {
+                response.setCharacterEncoding("UTF-8");
+                chain.doFilter(request, response);
+            }, "/*")
+            .build();
 
     }
 
@@ -79,17 +79,17 @@ public class MesaControllerTest {
             var mesaDomain = buildMesaDomain();
 
             when(mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa
+                idRestaurante, dataReserva, horaReserva, statusMesa
             )).thenReturn(List.of(mesaDomain));
 
             mockMvc.perform(get("/mesas/{idRestaurante}/{dataReserva}/{horaReserva}", idRestaurante,
-                    dataReserva, horaReserva)
-                    .param("statusMesa", String.valueOf(statusMesa))
+                dataReserva, horaReserva)
+                .param("statusMesa", String.valueOf(statusMesa))
             ).andExpect(status().isOk());
 
             verify(mesaUseCase, times(1))
-                    .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                            any(String.class), any(LocalDate.class), any(LocalTime.class), any(StatusMesa.class));
+                .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+                    any(String.class), any(LocalDate.class), any(LocalTime.class), any(StatusMesa.class));
         }
 
         @Test
@@ -101,16 +101,16 @@ public class MesaControllerTest {
             var mesaDomain = buildMesaDomain();
 
             when(mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, null
+                idRestaurante, dataReserva, horaReserva, null
             )).thenReturn(List.of(mesaDomain));
 
             mockMvc.perform(get("/mesas/{idRestaurante}/{dataReserva}/{horaReserva}", idRestaurante,
-                    dataReserva, horaReserva)
+                dataReserva, horaReserva)
             ).andExpect(status().isOk());
 
             verify(mesaUseCase, times(1))
-                    .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                            any(String.class), any(LocalDate.class), any(LocalTime.class), any());
+                .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+                    any(String.class), any(LocalDate.class), any(LocalTime.class), any());
         }
 
         @Test
@@ -121,21 +121,21 @@ public class MesaControllerTest {
             var statusMesa = StatusMesa.OCUPADA;
 
             when(mesaUseCase.listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                    idRestaurante, dataReserva, horaReserva, statusMesa
+                idRestaurante, dataReserva, horaReserva, statusMesa
             )).thenThrow(NaoEncontradoException.class);
 
             mockMvc.perform(get("/mesas/{idRestaurante}/{dataReserva}/{horaReserva}", idRestaurante,
                     dataReserva, horaReserva)
                     .param("statusMesa", String.valueOf(statusMesa)))
-                    .andExpect(status().isNotFound())
-                    .andExpect(result -> {
-                        String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
-                        assertThat(json).contains("Nao Encontrado Exception");
-                    });
+                .andExpect(status().isNotFound())
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+                    assertThat(json).contains("Nao Encontrado Exception");
+                });
 
             verify(mesaUseCase, times(1))
-                    .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
-                            any(String.class), any(LocalDate.class), any(LocalTime.class), any(StatusMesa.class));
+                .listMesasByIdRestauranteAndDataReservaAndHoraReservaAndStatusMesa(
+                    any(String.class), any(LocalDate.class), any(LocalTime.class), any(StatusMesa.class));
         }
     }
 
@@ -151,9 +151,9 @@ public class MesaControllerTest {
             when(mesaUseCase.update(idRestaurante, statusMesa.getStatusMesa())).thenReturn(mesaDomain);
 
             mockMvc.perform(put("/mesas/{idRestaurante}", idRestaurante)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(asJsonString(statusMesa)))
-                    .andExpect(status().isAccepted());
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(statusMesa)))
+                .andExpect(status().isAccepted());
 
             verify(mesaUseCase, times(1)).update(idRestaurante, statusMesa.getStatusMesa());
         }
@@ -164,16 +164,16 @@ public class MesaControllerTest {
             var statusMesa = new StatusMesaRequest(StatusMesa.FINALIZADA);
 
             when(mesaUseCase.update(idRestaurante, statusMesa.getStatusMesa()))
-                    .thenThrow(NaoEncontradoException.class);
+                .thenThrow(NaoEncontradoException.class);
 
             mockMvc.perform(put("/mesas/{idRestaurante}", idRestaurante)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(asJsonString(statusMesa)))
-                    .andExpect(status().isNotFound())
-                    .andExpect(result -> {
-                        String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
-                        assertThat(json).contains("Nao Encontrado Exception");
-                    });
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(statusMesa)))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+                    assertThat(json).contains("Nao Encontrado Exception");
+                });
 
             verify(mesaUseCase, times(1)).update(idRestaurante, statusMesa.getStatusMesa());
         }
@@ -184,38 +184,38 @@ public class MesaControllerTest {
             var statusMesa = new StatusMesaRequest(StatusMesa.FINALIZADA);
 
             when(mesaUseCase.update(idRestaurante, statusMesa.getStatusMesa()))
-                    .thenThrow(StatusReservaException.class);
+                .thenThrow(StatusReservaException.class);
 
             mockMvc.perform(put("/mesas/{idRestaurante}", idRestaurante)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(asJsonString(statusMesa)))
-                    .andExpect(status().isUnprocessableEntity())
-                    .andExpect(result -> {
-                        String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
-                        assertThat(json).contains("Status Reserva!");
-                    });
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(statusMesa)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+                    assertThat(json).contains("Status Reserva!");
+                });
 
             verify(mesaUseCase, times(1)).update(idRestaurante, statusMesa.getStatusMesa());
         }
     }
 
-    private MesaDomain buildMesaDomain(){
+    private MesaDomain buildMesaDomain() {
         return new MesaDomain(
-                ObjectId.get().toString(),
-                "teste@teste.com",
-                StatusMesa.OCUPADA
+            ObjectId.get().toString(),
+            "teste@teste.com",
+            StatusMesa.OCUPADA
         );
     }
 
-    private MesaDomain buildMesaDomain(StatusMesa statusMesa){
+    private MesaDomain buildMesaDomain(StatusMesa statusMesa) {
         return new MesaDomain(
-                ObjectId.get().toString(),
-                "teste@teste.com",
-                statusMesa
+            ObjectId.get().toString(),
+            "teste@teste.com",
+            statusMesa
         );
     }
 
     public static String asJsonString(final Object object) throws JsonProcessingException {
-            return new ObjectMapper().writeValueAsString(object);
+        return new ObjectMapper().writeValueAsString(object);
     }
 }

@@ -2,7 +2,6 @@ package br.com.restauranteadjt.application.usecases;
 
 import br.com.restauranteadjt.application.gateways.RestauranteGateway;
 import br.com.restauranteadjt.domain.entity.RestauranteDomain;
-
 import java.util.List;
 
 public class RestauranteUseCase {
@@ -12,7 +11,7 @@ public class RestauranteUseCase {
         this.restauranteGateway = restauranteGateway;
     }
 
-    public RestauranteDomain create(RestauranteDomain restauranteDomain){
+    public RestauranteDomain create(RestauranteDomain restauranteDomain) {
         return restauranteGateway.create(restauranteDomain);
     }
 
@@ -20,7 +19,7 @@ public class RestauranteUseCase {
         return restauranteGateway.findByNomeOrTipoCozinhaOrLocalizacao(nome, tipoCozinha, localizacao);
     }
 
-    public RestauranteDomain findById(String id){
+    public RestauranteDomain findById(String id) {
         return restauranteGateway.findById(id);
     }
 

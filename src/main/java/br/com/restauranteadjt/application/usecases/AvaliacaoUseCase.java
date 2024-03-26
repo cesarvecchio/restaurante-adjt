@@ -2,7 +2,6 @@ package br.com.restauranteadjt.application.usecases;
 
 import br.com.restauranteadjt.application.gateways.AvaliacaoGateway;
 import br.com.restauranteadjt.domain.entity.AvaliacaoDomain;
-
 import java.util.List;
 
 public class AvaliacaoUseCase {
@@ -16,7 +15,7 @@ public class AvaliacaoUseCase {
         return avaliacaoGateway.create(idReserva, avaliacaoDomain);
     }
 
-    public List<AvaliacaoDomain> listByIdRestaurante(String idRestaurante){
+    public List<AvaliacaoDomain> listByIdRestaurante(String idRestaurante) {
         return avaliacaoGateway.listByIdRestaurante(idRestaurante);
     }
 }
