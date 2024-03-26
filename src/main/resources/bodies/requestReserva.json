@@ -1,7 +1,7 @@
 {
   "dataReserva": "#{dataReserva}",
   "horaReserva": "22:00:00",
-  "nome": "Albert",
+  "nome": "#{nome}",
   "email": "#{email}",
   "telefone": "40028922"
 }

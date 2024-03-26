@@ -56,8 +56,11 @@ public class AvaliacaoPerformanceSimulation extends Simulation {
             .exec(session -> session.set("nome", "Restaurante" + getRandomNumber()))
             .exec(adicionarRestauranteRequest)
             .exec(session ->
-                    session.set("dataReserva", LocalDate.now()
+                    session.set("dataReserva", LocalDate.now().plusDays(1)
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            )
+            .exec(session ->
+                    session.set("nome", Helper.criarTexto())
             )
             .exec(session ->
                     session.set("email", Helper.criarTexto() + "albert@gmail.com")
@@ -71,8 +74,10 @@ public class AvaliacaoPerformanceSimulation extends Simulation {
             .exec(session -> session.set("nome", "Restaurante" + getRandomNumber()))
             .exec(adicionarRestauranteRequest)
             .exec(session ->
-                    session.set("dataReserva", LocalDate.now()
+                    session.set("dataReserva", LocalDate.now().plusDays(1)
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            ).exec(session ->
+                    session.set("nome", Helper.criarTexto())
             )
             .exec(session ->
                     session.set("email", Helper.criarTexto() + "albert@gmail.com")
