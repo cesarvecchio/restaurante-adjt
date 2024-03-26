@@ -95,7 +95,7 @@ public class MesaControllerIT {
         @Test
         void devePermitirListarMesasPeloIdDoRestaurantes() {
             String idRestaurante = "65efa722ed1aa9f4356dca85";
-            String dataReserva = "2024-03-26";
+            String dataReserva = LocalDate.now().plusDays(2).toString();
             String horaReserva = "22:00:00";
             StatusMesa statusMesa = StatusMesa.OCUPADA;
 
